@@ -5,6 +5,9 @@ Refer to terms at: https://www.cdc.gov/nchs/data_access/restrictions.htm
 
 import os
 import urllib.request
+import truststore
+
+truststore.inject_into_ssl() # avoids SSL: CERTIFICATE_VERIFY_FAILED on MacOS
 
 user_guides = [
     "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/DVS/natality/UserGuide2022.pdf",
