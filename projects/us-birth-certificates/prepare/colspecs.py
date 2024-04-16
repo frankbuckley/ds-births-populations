@@ -90,3 +90,12 @@ colspecs_2020 = colspecs_2019
 colspecs_2021 = colspecs_2020
 
 colspecs_2022 = colspecs_2021
+
+# 2017 does not have MHISPX that appears in later years
+colspecs_2017 = colspecs_2018
+
+colspecs_2016 = colspecs_2017
+
+colspecs_2015 = colspecs_2016
+
+colspecs_2014 = colspecs_2015
