@@ -1,4 +1,4 @@
-"""Reads selected columns from 2021 data file and saves to HDF5 file."""
+"""Reads selected columns from 2021 data file and saves to Parquet file."""
 
 import pandas as pd
 
@@ -7,7 +7,7 @@ import columns
 
 
 def import_2021():
-    "Reads selected columns from 2021 data file and saves to HDF5 file."
+    "Reads selected columns from 2021 data file and saves to Parquet file."
 
     print("Importing 2021 data...")
 

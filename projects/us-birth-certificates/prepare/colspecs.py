@@ -1,6 +1,6 @@
 """Common specifications for source data files."""
 
-colspecs_2020 = [
+colspecs_2018 = [
     (8, 12),     #   0   DOB_YY         Birth Year
     (12, 14),    #   1   DOB_MM         Birth Month
     (31, 32),    #   2   BFACIL         Birth Place
@@ -30,8 +30,8 @@ colspecs_2020 = [
     (146, 148),  #  26   FAGECOMB       Father's Combined Age
     (148, 150),  #  27   FAGEREC11      Father's Age Recode 11
     (150, 152),  #  28   FRACE31        Father's Race Recode 31
-    (152, 153),  #  29   FRACE6         Father’s Race Recode 6
-    (153, 155),  #  30   FRACE15        Father’s Race Recode 15
+    (152, 153),  #  29   FRACE6         Father's Race Recode 6
+    (153, 155),  #  30   FRACE15        Father's Race Recode 15
     (158, 159),  #  31   FHISPX         Father's Hispanic Origin
     (159, 160),  #  32   FHISP_R        Father's Hispanic Origin Recode
     (160, 161),  #  33   F_FHISP        Reporting Flag for Father's Hispanic Origin
@@ -74,7 +74,18 @@ colspecs_2020 = [
     (558, 559),  #  70   F_CA_DISOR     Reporting Flag for Suspected Chromosomal Disorder
     (559, 560),  #  71   F_CA_HYPO      Reporting Flag for Hypospadias
     (560, 561),  #  72   NO_CONGEN      No Congenital Anomalies Checked
+    (225, 226),  #  73   F_MPCB         Reporting Flag for Month Prenatal Care Began
+    (226, 227),  #  74   PRECARE5       Month Prenatal Care Began Recode
+    (237, 239),  #  75   PREVIS         Number of Prenatal Visits
+    (241, 243),  #  76   PREVIS_REC     Number of Prenatal Visits Recode
+    (243, 244),  #  77   F_TPCV         Reporting Flag for Total Prenatal Care Visits
+    (250, 251),  #  78   WIC            WIC
+    (251, 252),  #  79   F_WIC          Reporting Flag for WIC
 ]
+
+colspecs_2019 = colspecs_2018
+
+colspecs_2020 = colspecs_2019
 
 colspecs_2021 = colspecs_2020
 
