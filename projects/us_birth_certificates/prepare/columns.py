@@ -1,7 +1,7 @@
 """Column utilities."""
 
 import pandas as pd
-from utils import get_ds_lb_chance
+from . import utils
 
 
 def rename_columns(df: pd.DataFrame, inplace=True) -> pd.DataFrame | None:
@@ -192,7 +192,7 @@ def add_computed_columns(df: pd.DataFrame) -> pd.DataFrame:
     df["DS"] = df["CA_DOWN"].apply(lambda x: ds_convert(str(x)))
 
     df["DS_LB_CHANCE"] = df["MAGER"].apply(
-        lambda x: get_ds_lb_chance(float(x)))
+        lambda x: utils.get_ds_lb_chance(float(x)))
 
     df = df.astype({
         "DS": "category",
