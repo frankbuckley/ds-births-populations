@@ -1,12 +1,12 @@
 """Common specifications for source data files."""
 
-colspecs_2022 = [
+colspecs_2020 = [
     (8, 12),     #   0   DOB_YY         Birth Year
     (12, 14),    #   1   DOB_MM         Birth Month
     (31, 32),    #   2   BFACIL         Birth Place
     (32, 33),    #   3   F_BFACIL       Reporting Flag for Birth Place
     (72, 73),    #   4   MAGE_IMPFLG    Mother's Age Imputed
-    (74, 75),    #   5   MAGE_REPFLG    Reported Age of Mother Used Flag
+    (73, 74),    #   5   MAGE_REPFLG    Reported Age of Mother Used Flag
     (74, 76),    #   6   MAGER          Mother's Single Years of Age
     (76, 78),    #   7   MAGER14        Mother's Age Recode 14
     (78, 79),    #   8   MAGER9         Mother's Age Recode 9
@@ -64,5 +64,18 @@ colspecs_2022 = [
     (548, 549),  #  60   CA_LIMB        Limb Reduction Defect
     (549, 550),  #  61   CA_CLEFT       Cleft Lip w/ or w/o Cleft Palate
     (550, 551),  #  62   CA_CLPAL       Cleft Palate alone
-    (551, 552),  #       CA_DOWN        Down Syndrome
+    (551, 552),  #  63   CA_DOWN        Down Syndrome
+    (552, 553),  #  64   CA_DISOR       Suspected Chromosomal Disorder
+    (553, 554),  #  65   CA_HYPO        Hypospadias
+    (554, 555),  #  66   F_CA_LIMB      Reporting Flag for Limb Reduction Defect
+    (555, 556),  #  67   F_CA_CLEFT     Reporting Flag for Cleft Lip with or without Cleft Palate
+    (556, 557),  #  68   F_CA_CLPAL     Reporting Flag for Cleft Palate Alone
+    (557, 558),  #  69   F_CA_DOWN      Reporting Flag for Down Syndrome
+    (558, 559),  #  70   F_CA_DISOR     Reporting Flag for Suspected Chromosomal Disorder
+    (559, 560),  #  71   F_CA_HYPO      Reporting Flag for Hypospadias
+    (560, 561),  #  72   NO_CONGEN      No Congenital Anomalies Checked
 ]
+
+colspecs_2021 = colspecs_2020
+
+colspecs_2022 = colspecs_2021
