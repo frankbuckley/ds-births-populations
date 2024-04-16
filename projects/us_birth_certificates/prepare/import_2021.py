@@ -2,8 +2,8 @@
 
 import pandas as pd
 
-import colspecs
-import columns
+from . import colspecs
+from . import columns
 
 
 def import_2021() -> pd.DataFrame:
@@ -15,7 +15,6 @@ def import_2021() -> pd.DataFrame:
         "data/Nat2021us/Nat2021US.txt",
         colspecs=colspecs.colspecs_2021,
         header=None,
-        dtype_backend="pyarrow",
     ).convert_dtypes()
 
     df.attrs["description"] = "US Births 2021"
@@ -27,6 +26,10 @@ def import_2021() -> pd.DataFrame:
     print("Setting column types...")
 
     df = columns.set_column_types(df)
+
+    print("Adding computed columns...")
+
+    df = columns.add_computed_columns(df)
 
     print("Saving to data/us_births_2021.parquet...")
 

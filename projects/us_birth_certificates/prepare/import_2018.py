@@ -2,9 +2,8 @@
 
 import pandas as pd
 
-import colspecs
-import columns
-
+from . import colspecs
+from . import columns
 
 def import_2018() -> pd.DataFrame:
     "Reads selected columns from 2018 data file and saves to Parquet file."
@@ -15,7 +14,6 @@ def import_2018() -> pd.DataFrame:
         "data/Nat2018us/Nat2018PublicUS.c20190509.r20190717.txt",
         colspecs=colspecs.colspecs_2018,
         header=None,
-        dtype_backend="pyarrow",
     ).convert_dtypes()
 
     df.attrs["description"] = "US Births 2018"
@@ -27,6 +25,10 @@ def import_2018() -> pd.DataFrame:
     print("Setting column types...")
 
     df = columns.set_column_types(df)
+
+    print("Adding computed columns...")
+
+    df = columns.add_computed_columns(df)
 
     print("Saving to data/us_births_2018.parquet...")
 

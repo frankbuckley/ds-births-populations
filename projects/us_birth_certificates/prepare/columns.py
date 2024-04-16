@@ -1,11 +1,8 @@
 """Column utilities."""
 
-import sys
 import pandas as pd
-
-sys.path.append('../us-birth-certificates')
-
 from utils import get_ds_lb_chance
+
 
 def rename_columns(df: pd.DataFrame, inplace=True) -> pd.DataFrame | None:
     """Renames columns to standard labels."""
@@ -192,11 +189,8 @@ def set_column_types(df: pd.DataFrame) -> pd.DataFrame:
 def add_computed_columns(df: pd.DataFrame) -> pd.DataFrame:
     """Adds standard computed columns."""
 
-    # DS: combine C (confirmed) and P (pending) from CA_DOWN into Y
     df["DS"] = df["CA_DOWN"].apply(lambda x: ds_convert(str(x)))
 
-    # DS_LB_CHANCE: chance of Down syndrome given mother's age
-    # using Moriss et al. (https://doi.org/10.1136/jms.9.1.2)
     df["DS_LB_CHANCE"] = df["MAGER"].apply(
         lambda x: get_ds_lb_chance(float(x)))
 
