@@ -5,9 +5,12 @@ Refer to terms at: https://www.cdc.gov/nchs/data_access/restrictions.htm
 
 import os
 import urllib.request
+# import zipfile
+
 import truststore
 
-truststore.inject_into_ssl() # avoids SSL: CERTIFICATE_VERIFY_FAILED on MacOS
+truststore.inject_into_ssl()  # avoids SSL: CERTIFICATE_VERIFY_FAILED on MacOS
+
 
 user_guides = [
     "https://ftp.cdc.gov/pub/Health_Statistics/NCHS/Dataset_Documentation/DVS/natality/UserGuide2022.pdf",
@@ -49,6 +52,16 @@ for data_file in us_data_files:
     if not os.path.exists(filename):
         print(f"Downloading {data_file}")
         urllib.request.urlretrieve(data_file, filename)
+
+# for data_file in us_data_files:
+#     filename = "data/" + data_file.rsplit("/", maxsplit=1)[-1]
+#     if os.path.exists(filename):
+#         print(f"Extracting {data_file}")
+#         try:
+#             with zipfile.ZipFile(filename, mode="r", allowZip64=True) as archive:
+#                 archive.extractall("data")
+#         except zipfile.BadZipFile as error:
+#             print(f"Error extracting {filename}: {error}")
 
 # Python ZipFile module fails with some of the data files
 # so see unzip_data.ps1 for a PowerShell script to unzip the files

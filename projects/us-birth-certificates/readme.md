@@ -30,7 +30,7 @@ The data files can be downloaded and extracted using the scripts described below
 To download the data files and user guides:
 
 ```bash
-python .\download_data.py
+python ./prepare/download_data.py
 ```
 
 This will place the downloads in a `data` folder.
@@ -38,9 +38,9 @@ This will place the downloads in a `data` folder.
 To unzip the data files:
 
 ```bash
-pwsh Expand-Archive .\data\Nat2021us.zip
+pwsh ./prepare/unzip_data.zip
 ```
 
-**Note**: there is an issue unzipping 2015 data to resolve
+**Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zi](https://www.7-zip.org/)
 
 This will extract the data files into subfolders: `data/Nat2015us`, `data/Nat2016us` and so on.
