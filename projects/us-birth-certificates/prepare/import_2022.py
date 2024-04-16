@@ -6,7 +6,7 @@ import colspecs
 import columns
 
 
-def import_2022():
+def import_2022() -> pd.DataFrame:
     "Reads selected columns from 2022 data file and saves to Parquet file."
 
     print("Importing 2022 data...")
@@ -31,6 +31,8 @@ def import_2022():
     print("Saving to data/us_births_2022.parquet...")
 
     df.to_parquet("data/us_births_2022.parquet")
+
+    return df
 
 
 if __name__ == "__main__":
