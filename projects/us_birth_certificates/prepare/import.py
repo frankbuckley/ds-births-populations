@@ -10,6 +10,9 @@ from . import columns
 def import_all():
     "Reads selected columns from all data files and saves to Parquet files."
 
+    data_2014 = import_2014()
+    data_2015 = import_2015()
+    data_2016 = import_2016()
     data_2017 = import_2017()
     data_2018 = import_2018()
     data_2019 = import_2019()
@@ -18,7 +21,7 @@ def import_all():
     data_2022 = import_2022()
 
     data_all = pd.concat(
-        [data_2017, data_2018, data_2019, data_2020,
+        [data_2014, data_2015, data_2016, data_2017, data_2018, data_2019, data_2020,
             data_2021, data_2022], ignore_index=True
     )
 

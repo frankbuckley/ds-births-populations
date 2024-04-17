@@ -13,12 +13,16 @@ def export_spss():
     now = datetime.now().strftime("%Y%m%d_%H%M")
 
     sources = [
-        # "data/us_births_2017.parquet",
+        "data/us_births_2014.parquet",
+        "data/us_births_2015.parquet",
+        "data/us_births_2016.parquet",
+        "data/us_births_2017.parquet",
         "data/us_births_2018.parquet",
         "data/us_births_2019.parquet",
         "data/us_births_2020.parquet",
         "data/us_births_2021.parquet",
-        "data/us_births_2022.parquet"
+        "data/us_births_2022.parquet",
+        "data/us_births_all.parquet"
     ]
 
     for source in sources:
