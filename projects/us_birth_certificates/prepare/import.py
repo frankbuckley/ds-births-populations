@@ -1,10 +1,11 @@
 """Reads selected columns from data files and saves to Parquet files."""
 
-
 import pandas as pd
 
 from . import colspecs
 from . import columns
+
+PARQUET_ENGINE = "fastparquet"
 
 
 def import_all():
@@ -22,10 +23,10 @@ def import_all():
 
     data_all = pd.concat(
         [data_2014, data_2015, data_2016, data_2017, data_2018, data_2019, data_2020,
-            data_2021, data_2022], ignore_index=True
+            data_2021, data_2022]
     )
 
-    data_all.to_parquet("data/us_births_all.parquet")
+    data_all.to_parquet("data/us_births_all.parquet", engine=PARQUET_ENGINE)
 
 
 def prepare_import(df: pd.DataFrame, year: int) -> pd.DataFrame:
@@ -39,7 +40,7 @@ def prepare_import(df: pd.DataFrame, year: int) -> pd.DataFrame:
 
     print("Setting column types...")
 
-    df = columns.set_column_types(df)
+    df = columns.set_imported_column_types(df)
 
     print("Adding computed columns...")
 
@@ -47,7 +48,7 @@ def prepare_import(df: pd.DataFrame, year: int) -> pd.DataFrame:
 
     print(f"Saving to data/us_births_{year}.parquet...")
 
-    df.to_parquet(f"data/us_births_{year}.parquet")
+    df.to_parquet(f"data/us_births_{year}.parquet", engine=PARQUET_ENGINE)
 
     return df
 
