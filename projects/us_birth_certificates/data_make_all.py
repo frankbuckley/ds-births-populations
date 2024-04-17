@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from . import columns
+import columns
 
 PARQUET_ENGINE = "fastparquet"
 

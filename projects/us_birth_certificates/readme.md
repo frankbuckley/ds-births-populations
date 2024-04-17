@@ -30,7 +30,7 @@ The data files can be downloaded and extracted using the scripts described below
 To download the data files and user guides:
 
 ```bash
-python ./prepare/download_data.py
+python ./data_download.py
 ```
 
 This will place the downloads in a `data` folder.
@@ -38,7 +38,7 @@ This will place the downloads in a `data` folder.
 To unzip the data files:
 
 ```bash
-pwsh ./prepare/unzip_data.zip
+pwsh ./unzip_data.zip
 ```
 
 **Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zi](https://www.7-zip.org/)

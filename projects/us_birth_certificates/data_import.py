@@ -2,8 +2,8 @@
 
 import pandas as pd
 
-from . import colspecs
-from . import columns
+import colspecs
+import columns
 
 PARQUET_ENGINE = "fastparquet"
 

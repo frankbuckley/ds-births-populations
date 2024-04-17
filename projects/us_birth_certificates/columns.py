@@ -2,8 +2,9 @@
 
 import pandas as pd
 
-from .. import calc
-from .. import fields
+import chance
+import fields
+
 
 computed_column_types = {
     fields.DS: "category",
@@ -11,7 +12,7 @@ computed_column_types = {
 }
 
 imported_column_types = {
-    fields.DOB_YY: "category",
+    fields.DOB_YY: "int32",
     fields.DOB_MM: "category",
     fields.BFACIL: "category",
     fields.F_BFACIL: "category",
@@ -212,7 +213,7 @@ def add_computed_columns(df: pd.DataFrame) -> pd.DataFrame:
     df[fields.DS] = df[fields.CA_DOWN].apply(lambda x: ds_convert(str(x)))
 
     df[fields.DS_LB_CHANCE] = df[fields.MAGER].apply(
-        lambda x: calc.get_ds_lb_chance(float(x)))
+        lambda x: chance.get_ds_lb_chance(float(x)))
 
     df = set_computed_column_types(df)
 
