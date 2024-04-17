@@ -12,8 +12,8 @@ Use of the data is subject to the [National Center for Health Statistics (NCHS) 
 
 ### Requirements
 
-- [Python](https://www.python.org/downloads/) (tested so far on Windows with version 3.12.3)
-- [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (tested so far on Windows with version 7.4.2)
+- [Python](https://www.python.org/downloads/) (tested so far on Windows and MacOS with version 3.12.3)
+- [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (tested so far on Windows and MacOS with version 7.4.2)
 
 To install Python packages:
 
@@ -30,7 +30,7 @@ The data files can be downloaded and extracted using the scripts described below
 To download the data files and user guides:
 
 ```bash
-python ./data_download.py
+python ./prepare/download_data.py
 ```
 
 This will place the downloads in a `data` folder.
@@ -38,7 +38,7 @@ This will place the downloads in a `data` folder.
 To unzip the data files:
 
 ```bash
-pwsh ./unzip_data.zip
+pwsh ./prepare/unzip_data.zip
 ```
 
 **Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zi](https://www.7-zip.org/)
