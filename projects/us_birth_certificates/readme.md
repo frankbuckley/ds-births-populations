@@ -41,6 +41,6 @@ To unzip the data files:
 pwsh ./prepare/unzip_data.zip
 ```
 
-**Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zi](https://www.7-zip.org/)
+**Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zip](https://www.7-zip.org/)
 
 This will extract the data files into subfolders: `data/Nat2015us`, `data/Nat2016us` and so on.
