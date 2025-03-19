@@ -1,8 +1,11 @@
 <Project>
+  
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-  <ItemGroup>
 
+  <ItemGroup>
+    <PackageVersion Include="DuckDB.NET.Data.Full" Version="1.2.1" />
   </ItemGroup>
+  
 </Project>
