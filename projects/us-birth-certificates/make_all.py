@@ -20,6 +20,8 @@ def merge_years():
         "data/us_births_2020.parquet",
         "data/us_births_2021.parquet",
         "data/us_births_2022.parquet",
+        "data/us_births_2023.parquet",
+        "data/us_births_2024.parquet",
     ]
 
     dataframes = []

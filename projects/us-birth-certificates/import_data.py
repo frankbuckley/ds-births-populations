@@ -20,10 +20,23 @@ def import_all():
     data_2020 = import_2020()
     data_2021 = import_2021()
     data_2022 = import_2022()
+    data_2023 = import_2023()
+    data_2024 = import_2024()
 
     data_all = pd.concat(
-        [data_2014, data_2015, data_2016, data_2017, data_2018, data_2019, data_2020,
-            data_2021, data_2022]
+        [
+            data_2014,
+            data_2015,
+            data_2016,
+            data_2017,
+            data_2018,
+            data_2019,
+            data_2020,
+            data_2021,
+            data_2022,
+            data_2023,
+            data_2024,
+        ]
     )
 
     data_all.to_parquet("data/us_births_all.parquet", engine=PARQUET_ENGINE)
@@ -193,6 +206,38 @@ def import_2022() -> pd.DataFrame:
     ).convert_dtypes()
 
     prepare_import(df, 2022)
+
+    return df
+
+
+def import_2023() -> pd.DataFrame:
+    "Reads selected columns from 2023 data file and saves to Parquet file."
+
+    print("Importing 2023 data...")
+
+    df = pd.read_fwf(
+        "data/Nat2023us/Nat2023PublicUS.c20240509.r20240724.txt",
+        colspecs=colspecs.colspecs_2023,
+        header=None,
+    ).convert_dtypes()
+
+    prepare_import(df, 2023)
+
+    return df
+
+
+def import_2024() -> pd.DataFrame:
+    "Reads selected columns from 2024 data file and saves to Parquet file."
+
+    print("Importing 2024 data...")
+
+    df = pd.read_fwf(
+        "data/Nat2024us/Nat2024PublicUS.c20250512.r20250708.txt",
+        colspecs=colspecs.colspecs_2024,
+        header=None,
+    ).convert_dtypes()
+
+    prepare_import(df, 2024)
 
     return df
 

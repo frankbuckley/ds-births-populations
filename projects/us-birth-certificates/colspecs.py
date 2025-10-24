@@ -93,6 +93,8 @@ colspecs_2022 = colspecs_2021
 
 colspecs_2023 = colspecs_2022
 
+colspecs_2024 = colspecs_2022
+
 # 2017 does not have MHISPX that appears in later years
 colspecs_2017 = colspecs_2018
 
