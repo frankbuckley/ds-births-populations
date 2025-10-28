@@ -12,14 +12,9 @@ Use of the data is subject to the [National Center for Health Statistics (NCHS) 
 
 ### Requirements
 
-- [Python](https://www.python.org/downloads/) (tested so far on Windows and MacOS with version 3.12.3)
-- [PowerShell](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell) (tested so far on Windows and MacOS with version 7.4.2)
+- [Python](https://www.python.org/downloads/)
 
-To install Python packages:
-
-```bash
-pip install -r .\requirements.txt --upgrade
-```
+TODO
 
 ### Download data
 
@@ -34,13 +29,3 @@ python ./prepare/download_data.py
 ```
 
 This will place the downloads in a `data` folder.
-
-To unzip the data files:
-
-```bash
-pwsh ./prepare/unzip_data.zip
-```
-
-**Note**: there is an issue unzipping 2015 data. This can be completed manually using [7-Zip](https://www.7-zip.org/)
-
-This will extract the data files into subfolders: `data/Nat2015us`, `data/Nat2016us` and so on.
