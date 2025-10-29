@@ -81,5 +81,13 @@ PREVIS_REC = "previs_rec"
 F_TPCV = "f_tpcv"
 WIC = "wic"
 F_WIC = "f_wic"
-DS = "ds"
+
+DS = "ds" # phase out for DS_CORP
+
+DS_C = "ds_c"
+DS_P = "ds_p"
+DS_N = "ds_n"
+DS_U = "ds_u"
+DS_CORP = "ds_corp"
+
 DS_LB_CHANCE = "ds_lb_chance"
