@@ -40,7 +40,7 @@ user_guides = [
 ]
 
 # 1989 is the first year DOWNS is included to 2002; UCA_DOWNS in 2003; UCA_DOWNS and CA_DOWNS in 2004; from 2004 this is coded as CA_DOWNS
-us_data_files = [
+us_data_files_sas = [
     "https://data.nber.org/nvss/natality/sas/1989/natality1989us.sas7bdat",
     "https://data.nber.org/nvss/natality/sas/1990/natality1990us.sas7bdat",
     "https://data.nber.org/nvss/natality/sas/1991/natality1991us.sas7bdat",
@@ -79,6 +79,10 @@ us_data_files = [
     "https://data.nber.org/nvss/natality/sas/2024/natality2024us.sas7bdat",
 ]
 
+us_data_files_stata = [
+    "https://data.nber.org/nvss/natality/dta/2012/natality2012us.dta"
+]
+
 if not os.path.exists("data"):
     os.makedirs("data")
 
@@ -88,7 +92,7 @@ for user_guide in user_guides:
         print(f"Downloading {user_guide}")
         urllib.request.urlretrieve(user_guide, filename)
 
-for data_file in us_data_files:
+for data_file in us_data_files_sas:
     filename = "data/" + data_file.rsplit("/", maxsplit=1)[-1]
     if not os.path.exists(filename):
         print(f"Downloading {data_file}")
