@@ -1,10 +1,8 @@
 """Reads data files and saves to Parquet files."""
-
+import gc
 import pathlib
 import pandas as pd
 import columns
-
-PARQUET_ENGINE = "fastparquet"
 
 
 def import_all():
@@ -25,21 +23,7 @@ def import_all():
 
     for year, source in sources.items():
         import_from_sas(source, year)
-
-
-def import_from_stata(source: str, year: int):
-
-    print(f"Importing data for year {year} from {source}...")
-
-    df = pd.read_stata(
-        source,
-        preserve_dtypes=False,
-        columns=columns.imported_columns,
-    ).convert_dtypes()
-
-    print(f"Saving to data/us_births_{year}.parquet...")
-
-    df.to_parquet(f"data/us_births_{year}.parquet", engine=PARQUET_ENGINE)
+        gc.collect()
 
 
 # TODO: 2018, 2019 import warnings:
@@ -48,20 +32,19 @@ def import_from_stata(source: str, year: int):
 
 
 def import_from_sas(source: str, year: int):
-
     print(f"Importing data for year {year} from {source}...")
 
     df = pd.read_sas(source, format="sas7bdat", encoding="latin-1").convert_dtypes()
 
     df = df.reindex(columns=columns.imported_columns)
 
-    columns.ensure_imported_columns(df)
+    columns.ensure_columns(df)
     columns.set_imported_column_types(df)
-    columns.add_computed_columns(df)
+    columns.set_computed_columns(df)
 
     print(f"Saving to data/us_births_{year}.parquet...")
 
-    df.to_parquet(f"data/us_births_{year}.parquet", engine=PARQUET_ENGINE)
+    df.to_parquet(f"data/us_births_{year}.parquet")
 
 
 if __name__ == "__main__":
