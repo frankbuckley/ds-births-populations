@@ -55,6 +55,7 @@ def import_from_sas(source: str, year: int):
 
     df = df.reindex(columns=columns.imported_columns)
 
+    columns.ensure_imported_columns(df)
     columns.set_imported_column_types(df)
     columns.add_computed_columns(df)
 
