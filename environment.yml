@@ -19,6 +19,7 @@ dependencies:
   - nutpie
   - orjson
   - pandas
+  - pandas-stubs
   - pandoc
   - polars
   - pyarrow

@@ -29,7 +29,7 @@ def import_all():
 
 def import_from_stata(source: str, year: int):
 
-    print(f"Importing {source}...")
+    print(f"Importing data for year {year} from {source}...")
 
     df = pd.read_stata(
         source,
@@ -49,7 +49,7 @@ def import_from_stata(source: str, year: int):
 
 def import_from_sas(source: str, year: int):
 
-    print(f"Importing {source}...")
+    print(f"Importing data for year {year} from {source}...")
 
     df = pd.read_sas(source, format="sas7bdat", encoding="latin-1").convert_dtypes()
 
