@@ -75,12 +75,15 @@ class Fields(StrEnum):
     DOWNS = "downs"  # from 1989 to 2002
     UCA_DOWNS = "uca_downs"  # 2003
     CA_DOWN = "ca_down"  # from 2004 onward
+    CA_DOWNS = "ca_downs" # with s 2012 - 2017
+    CA_DOWN_C = "ca_down_c"  # combined
     CA_DISOR = "ca_disor"
     CA_HYPO = "ca_hypo"
     F_CA_LIMB = "f_ca_limb"
     F_CA_CLEFT = "f_ca_cleftlp"
     F_CA_CLPAL = "f_ca_cleft"
-    F_CA_DOWN = "f_ca_downs"
+    F_CA_DOWN = "f_ca_down"
+    F_CA_DOWNS = "f_ca_downs"
     F_CA_DISOR = "f_ca_chrom"
     F_CA_HYPO = "f_ca_hypos"
     NO_CONGEN = "no_congen"
