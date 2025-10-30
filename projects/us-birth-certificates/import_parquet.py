@@ -38,9 +38,10 @@ def import_from_sas(source: str, year: int):
 
     df = df.reindex(columns=columns.imported_columns)
 
-    columns.ensure_columns(df)
+    columns.ensure_imported_columns(df)
     columns.set_imported_column_types(df)
-    columns.set_computed_columns(df)
+
+    # do not compute columns on initial import
 
     print(f"Saving to data/us_births_{year}.parquet...")
 

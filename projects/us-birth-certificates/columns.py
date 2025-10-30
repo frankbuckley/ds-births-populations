@@ -19,8 +19,7 @@ imported_column_types: dict[
     str, pd.Float64Dtype | pd.UInt8Dtype | pd.UInt16Dtype | pd.UInt32Dtype | pd.UInt64Dtype | pd.Int16Dtype | pd.Int32Dtype | pd.Int64Dtype | pd.CategoricalDtype
 ] = {
     str(Fields.DOB_YY): pd.UInt16Dtype(),
-    str(Fields.DOB_MM): pd.Int64Dtype(),
-    # there some to be data files with floats in this column that convert to greater than
+    str(Fields.DOB_MM): pd.CategoricalDtype(),
     str(Fields.BFACIL): pd.UInt8Dtype(),
     str(Fields.F_BFACIL): pd.CategoricalDtype(),
     str(Fields.MAGE_IMPFLG): pd.CategoricalDtype(),
