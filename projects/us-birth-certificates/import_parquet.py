@@ -34,9 +34,9 @@ def import_all():
 def import_from_sas(source: str, year: int):
     print(f"Importing data for year {year} from {source}...")
 
-    df = pd.read_sas(source, format="sas7bdat", encoding="latin-1").convert_dtypes()
+    df = pd.read_sas(source, format="sas7bdat", encoding="latin-1")
 
-    df = df.reindex(columns=columns.imported_columns)
+    df = df.reindex(columns=columns.imported_columns).convert_dtypes()
 
     columns.ensure_imported_columns(df)
     columns.set_imported_column_types(df)
