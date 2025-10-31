@@ -6,13 +6,13 @@ import polars as pl
 
 def combine_all() -> None:
     src_dir = pathlib.Path("data")
-    out_parquet = src_dir / "us_births.parquet"  # destination
+    out_parquet = src_dir / "us_births_combined.parquet"  # destination
 
     out_parquet.unlink(missing_ok=True)
 
     paths = list(src_dir.glob("*.parquet"))
     paths.sort(reverse=True)
-    
+
     if not paths:
         raise FileNotFoundError(f"No input Parquet files found in {src_dir.resolve()}")
 

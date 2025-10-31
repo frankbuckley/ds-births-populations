@@ -6,7 +6,7 @@ from fields import Fields
 
 computed_column_types: dict[str, pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype] = {
     str(Fields.DS): pd.CategoricalDtype(),
-    str(Fields.DS_LB_CHANCE): pd.Float64Dtype(),
+    str(Fields.P_DS_LB): pd.Float64Dtype(),
     str(Fields.CA_DOWN_C): pd.CategoricalDtype(categories=["C", "P", "N", "U"], ordered=False),
     str(Fields.DS_C): pd.CategoricalDtype(),
     str(Fields.DS_P): pd.CategoricalDtype(),
@@ -143,10 +143,10 @@ def set_imported_column_types(df: pd.DataFrame) -> pd.DataFrame:
         try:
             # importing 2005: TypeError: Cannot cast array data from dtype('float64') to dtype('uint16')
             if (dtype == pd.UInt8Dtype()
-                or dtype == pd.UInt16Dtype() or dtype == pd.UInt32Dtype()
-                or dtype == pd.UInt64Dtype() or dtype == pd.Int16Dtype()
-                or dtype == pd.Int32Dtype() or dtype == pd.Int64Dtype()):
-              df[col] = pd.to_numeric(df[col], downcast="unsigned").astype(dtype, errors="raise")
+                    or dtype == pd.UInt16Dtype() or dtype == pd.UInt32Dtype()
+                    or dtype == pd.UInt64Dtype() or dtype == pd.Int16Dtype()
+                    or dtype == pd.Int32Dtype() or dtype == pd.Int64Dtype()):
+                df[col] = pd.to_numeric(df[col], downcast="unsigned").astype(dtype, errors="raise")
             else:
                 df[col] = df[col].astype(dtype, errors="raise")
         except ValueError as e:
@@ -182,8 +182,8 @@ def set_computed_columns(df: pd.DataFrame) -> pd.DataFrame:
         lambda x: is_confirmed_or_pending(str(x))
     ).astype(pd.CategoricalDtype())
 
-    df[str(Fields.DS_LB_CHANCE)] = df[str(Fields.MAGER)].apply(
-        lambda x: chance.get_ds_lb_chance(x)
+    df[str(Fields.P_DS_LB)] = df[str(Fields.MAGER)].apply(
+        lambda x: chance.get_ds_lb_nt_probability(x)
     ).astype(pd.Float64Dtype())
 
     df[str(Fields.CA_DOWN_C)] = df[str(Fields.CA_DOWN)].fillna(df[str(Fields.CA_DOWNS)])

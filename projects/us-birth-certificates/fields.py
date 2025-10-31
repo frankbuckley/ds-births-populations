@@ -75,7 +75,7 @@ class Fields(StrEnum):
     DOWNS = "downs"  # from 1989 to 2002
     UCA_DOWNS = "uca_downs"  # 2003
     CA_DOWN = "ca_down"  # from 2004 onward
-    CA_DOWNS = "ca_downs" # with s 2012 - 2017
+    CA_DOWNS = "ca_downs"  # with s 2012 - 2017
     CA_DOWN_C = "ca_down_c"  # combined
     CA_DISOR = "ca_disor"
     CA_HYPO = "ca_hypo"
@@ -103,4 +103,8 @@ class Fields(StrEnum):
     DS_U = "ds_u"
     DS_CORP = "ds_corp"
 
-    DS_LB_CHANCE = "ds_lb_chance"
+    P_DS_LB_NT = "p_ds_lb_nt"
+    """Probability of Down syndrome live birth absent terminations. Estimated from maternal age using Morris formula."""
+
+    P_DS_LB_WT = "p_ds_lb_wt"
+    """Probability of Down syndrome live birth with terminations. Estimated from surveillance-based prevalence"""
