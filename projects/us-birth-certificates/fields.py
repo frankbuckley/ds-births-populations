@@ -17,6 +17,8 @@ class Fields(StrEnum):
     MAGE_REPFLG = "mage_repflg"
     MAGER = "mager"
     """Mother's Single Years of Age"""
+    DMAGE = "dmage"
+    """Mother's single year of age (pre 2004)"""
     MAGER14 = "mager14"
     MAGER9 = "mager9"
     MBSTATE_REC = "mbstate_rec"
@@ -61,7 +63,7 @@ class Fields(StrEnum):
     CA_MNSB = "ca_mnsb"
     CA_CCHD = "ca_cchd"
     CA_CDH = "ca_cdh"
-    OMPH = "ca_omph"
+    CA_OMPH = "ca_omph"
     CA_GAST = "ca_gast"
     F_CA_ANEN = "f_ca_anen"
     F_CA_MENIN = "f_ca_menin"
@@ -77,6 +79,7 @@ class Fields(StrEnum):
     CA_DOWN = "ca_down"  # from 2004 onward
     CA_DOWNS = "ca_downs"  # with s 2012 - 2017
     CA_DOWN_C = "ca_down_c"  # combined
+    DOWN_IND = "down_ind" # DS indicated (UCA_DOWNS | CA_DOWNS | CA_DOWN)
     CA_DISOR = "ca_disor"
     CA_HYPO = "ca_hypo"
     F_CA_LIMB = "f_ca_limb"

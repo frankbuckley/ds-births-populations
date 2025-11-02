@@ -6,8 +6,10 @@ from fields import Fields
 
 computed_column_types: dict[str, pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype] = {
     str(Fields.DS): pd.CategoricalDtype(),
-    str(Fields.P_DS_LB): pd.Float64Dtype(),
+    str(Fields.P_DS_LB_NT): pd.Float64Dtype(),
+    str(Fields.P_DS_LB_WT): pd.Float64Dtype(),
     str(Fields.CA_DOWN_C): pd.CategoricalDtype(categories=["C", "P", "N", "U"], ordered=False),
+    str(Fields.DOWN_IND): pd.CategoricalDtype(),
     str(Fields.DS_C): pd.CategoricalDtype(),
     str(Fields.DS_P): pd.CategoricalDtype(),
     str(Fields.DS_N): pd.CategoricalDtype(),
@@ -25,6 +27,7 @@ imported_column_types: dict[
     str(Fields.MAGE_IMPFLG): pd.CategoricalDtype(),
     str(Fields.MAGE_REPFLG): pd.CategoricalDtype(),
     str(Fields.MAGER): pd.CategoricalDtype(),
+    str(Fields.DMAGE): pd.CategoricalDtype(),
     str(Fields.MAGER14): pd.CategoricalDtype(),
     str(Fields.MAGER9): pd.CategoricalDtype(),
     str(Fields.MBSTATE_REC): pd.CategoricalDtype(),
@@ -76,7 +79,7 @@ imported_column_types: dict[
     str(Fields.CA_MNSB): pd.CategoricalDtype(),
     str(Fields.CA_CCHD): pd.CategoricalDtype(),
     str(Fields.CA_CDH): pd.CategoricalDtype(),
-    str(Fields.OMPH): pd.CategoricalDtype(),
+    str(Fields.CA_OMPH): pd.CategoricalDtype(),
     str(Fields.CA_GAST): pd.CategoricalDtype(),
     str(Fields.F_CA_ANEN): pd.CategoricalDtype(),
     str(Fields.F_CA_MENIN): pd.CategoricalDtype(),
