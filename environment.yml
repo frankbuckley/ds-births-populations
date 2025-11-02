@@ -1,0 +1,38 @@
+name: data-stats-models-ml
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.13
+  - arviz
+  - blackjax
+  - duckdb
+  - fastparquet
+  - graphviz
+  - ipython
+  - jax
+  - jupyter
+  - matplotlib
+  - networkx
+  - numpy
+  - numpyro
+  - nutpie
+  - orjson
+  - pandas
+  - pandas-stubs
+  - pandoc
+  - polars
+  - pyarrow
+  - pymc
+  - pyreadstat
+  - pytorch
+  - pyxlsb
+  - scikit-learn
+  - scipy
+  - seaborn
+  - statsmodels
+  - tabulate
+  - xarray
+  - xlrd
+  - XlsxWriter
+  - pip
