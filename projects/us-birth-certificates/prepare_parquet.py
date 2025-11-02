@@ -4,9 +4,14 @@ import pandas as pd
 from data_utils import constrain_pa_series_to_uint8, constrain_pa_series_to_uint16
 from variables import Variables as vars
 
+
+print("Reading parquet file...")
+
 df = pd.read_parquet("./data/us_births_combined.parquet", dtype_backend="pyarrow")
 
-df[vars.DATAYEAR] = constrain_pa_series_to_uint16(df[vars.DOB_YY], min=1989)
+print("Setting data types and constraints...")
+
+df[vars.DATAYEAR] = constrain_pa_series_to_uint16(df[vars.DATAYEAR], min=1989)
 df[vars.DOB_YY] = constrain_pa_series_to_uint16(df[vars.DOB_YY], min=1989)
 df[vars.DOB_MM] = constrain_pa_series_to_uint8(df[vars.DOB_MM], min=1, max=12)
 df[vars.OSTATE] = df[vars.OSTATE].astype(pd.ArrowDtype(pa.string()))
@@ -105,11 +110,37 @@ df[vars.UCA_DOWNS] = constrain_pa_series_to_uint8(df[vars.UCA_DOWNS], min=1, max
 df[vars.CA_DOWN] = df[vars.CA_DOWN].astype(pd.ArrowDtype(pa.string()))
 df[vars.CA_DOWNS] = df[vars.CA_DOWNS].astype(pd.ArrowDtype(pa.string()))
 
+print("Setting 'year'")
+
 # combine DATAYEAR and DOB_YY into CA_DOWN_C
 df[vars.YEAR] = df[vars.DOB_YY].combine_first(df[vars.DATAYEAR])
 
+print("Setting 'ca_down_c'")
+
 # combine CA_DOWN and CA_DOWNS into CA_DOWN_C
 df[vars.CA_DOWN_C] = df[vars.CA_DOWN].combine_first(df[vars.CA_DOWNS])
+
+print("Setting 'down_ind'")
+
+# DOWN_IND
+# 0: No Down syndrome (DOWNS = 2, CA_DOWNS = 'N', CA_DOWN = 'N')'
+# 1: Down syndrome (DOWNS = 1, CA_DOWNS = C or P, CA_DOWN = C or P)
+df = df.assign(
+    down_ind = (
+        (df[vars.DOWNS].eq(1))
+        | (df[vars.UCA_DOWNS].eq(1))
+        | (df[vars.CA_DOWN_C].isin(["C", "P"]))
+    ).astype("UInt8")  # convert True/False → 1.0/0.0
+)
+
+df.loc[
+    (df[vars.DOWNS].eq(2))
+    | (df[vars.DOWNS].eq(2))
+    | (df[vars.CA_DOWN_C].eq("N")),
+    "down_ind"
+] = 0
+
+print("Setting 'mage_c'")
 
 # note: we only have MAGER from 2004. Before then there is DMAGE:
 # "This item is: a) computed using dates of birth of mother and of delivery;
@@ -117,11 +148,13 @@ df[vars.CA_DOWN_C] = df[vars.CA_DOWN].combine_first(df[vars.CA_DOWNS])
 # MAGER41: 01 = <15, 02 = 15, 41 = 54
 df[vars.MAGE_C] = df[vars.MAGER].combine_first(df[vars.DMAGE].combine_first(df[vars.MAGER41] + 13))
 
+print("Setting 'p_ds_lb_nt'")
+
 df[vars.P_DS_LB_NT] = chance.get_ds_lb_nt_probability_array(df[vars.MAGE_C])
 
 prevalence_df = pd.DataFrame({
-    vars.DOB_YY: list(range(1989, 2025)),
-    vars.P_DS_LB_WT: [
+    str(vars.YEAR): list(range(1989, 2025)),
+    str(vars.P_DS_LB_WT): [
         0.001038,
         0.001055,
         0.001077,
@@ -161,6 +194,10 @@ prevalence_df = pd.DataFrame({
     ],
 })
 
-df = df.merge(prevalence_df, on=vars.DOB_YY, how="left")
+print("Setting 'p_ds_lb_wt'")
+
+df = df.merge(prevalence_df, on=vars.YEAR, how="left")
+
+print("Writing file...")
 
 df.to_parquet("./data/us_births.parquet")

@@ -1,7 +1,6 @@
 """Column utilities."""
 
 import pandas as pd
-import chance
 
 from enum import StrEnum
 
@@ -153,7 +152,6 @@ class Variables(StrEnum):
     CA_DOWN = "ca_down"  # from 2004 onward
     CA_DOWNS = "ca_downs"  # with s 2012 - 2017
     CA_DOWN_C = "ca_down_c"  # combined
-    DOWN_IND = "down_ind"  # DS indicated (UCA_DOWNS | CA_DOWNS | CA_DOWN)
     CA_DISOR = "ca_disor"
     CA_HYPO = "ca_hypo"
     F_CA_LIMB = "f_ca_limb"
@@ -175,6 +173,8 @@ class Variables(StrEnum):
     YEAR = "year"
 
     MAGE_C = "mage_c"
+
+    DOWN_IND = "down_ind"  # DS indicated (DOWNS | UCA_DOWNS | CA_DOWNS | CA_DOWN)
 
     DS = "ds"  # phase out for DS_CORP
 
