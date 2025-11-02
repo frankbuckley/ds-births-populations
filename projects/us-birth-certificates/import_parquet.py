@@ -2,7 +2,7 @@
 import gc
 import pathlib
 import pandas as pd
-import columns
+import variables
 
 
 def import_all():
@@ -33,7 +33,7 @@ def import_from_sas(source: str, year: int):
     print(f"Importing data for year {year} from {source}...")
 
     df = pd.read_sas(source, format="sas7bdat", encoding="latin-1")
-    df = df.reindex(columns=columns.imported_columns)
+    df = df.reindex(columns=variables.IMPORTED_VARS)
 
     print(f"Saving to data/us_births_{year}.parquet...")
 

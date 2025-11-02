@@ -11,6 +11,11 @@ guidelines = 120
 max_line_length = 120
 # (Please don't specify an indent_size here; that has too many unintended consequences.)
 
+; Python: PEP8 defines 4 spaces for indentation
+[*.py]
+indent_style = space
+indent_size = 4
+
 # Code files
 [*.{cs,csx,vb,vbx}]
 tab_width = 4
