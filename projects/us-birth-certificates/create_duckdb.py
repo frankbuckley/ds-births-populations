@@ -13,6 +13,8 @@ def combine_all() -> None:
 
     con = duckdb.connect(out_db.as_posix())
 
+    print("Importing Parquet file into DuckDB us_births...")
+
     try:
         con.execute(
             """
@@ -25,6 +27,102 @@ def combine_all() -> None:
         con.close()
 
     print(f"DuckDB table created at: {out_db}")
+
+
+    try:
+        print("Altering us_births to add mrace_c column...")
+        
+        con.execute(
+            """
+            ALTER TABLE us_births 
+            ADD COLUMN mrace_c UTINYINT
+            """
+        )
+        
+        print("Adding mrace_c column...")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+            ADD COLUMN mrace_c UTINYINT
+            """
+        )
+
+        print("Adding mhisp_c column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+            ADD COLUMN mhisp_c UTINYINT
+            """
+        )
+
+        print("Setting mrace_c...")
+
+        con.execute(
+            """    
+            UPDATE us_births
+            SET mrace_c = CASE
+                WHEN mrace15 IS NOT NULL THEN
+                    CASE
+                        WHEN mrace15 IN (1, 2, 3) THEN mrace15
+                        WHEN mrace15 BETWEEN 4 AND 14 THEN 4
+                    END
+                WHEN mracerec IS NOT NULL THEN
+                    CASE
+                        WHEN mracerec IN (1, 2, 3, 4) THEN mracerec
+                    END
+                WHEN mbrace IS NOT NULL THEN
+                    CASE
+                        WHEN mbrace IN (1, 2, 3, 4) THEN mbrace
+                    END
+                WHEN mrace IS NOT NULL THEN
+                    CASE
+                        WHEN mrace IN (1, 2, 3) THEN mrace
+                        WHEN mrace BETWEEN 4 AND 78 THEN 4
+                    END
+                ELSE NULL
+            END
+            """)
+        
+        print("Setting mhisp_c...")
+        
+        con.execute(
+            """
+            UPDATE us_births
+            SET mhisp_c = CASE
+                WHEN mhisp_r IS NOT NULL THEN
+                    CASE
+                        WHEN mhisp_r IN (0, 1, 2, 3) THEN mhisp_r
+                        WHEN mhisp_r BETWEEN 4 AND 5 THEN 4
+                        WHEN mhisp_r = 9 THEN 5
+                    END
+                WHEN mhispx IS NOT NULL THEN
+                    CASE
+                        WHEN mhispx IN (0, 1, 2, 3) THEN mhispx
+                        WHEN mhispx BETWEEN 4 AND 6 THEN 4
+                        WHEN mhispx = 9 THEN 5
+                    END
+                WHEN umhisp IS NOT NULL THEN
+                    CASE
+                        WHEN umhisp IN (0, 1, 2, 3) THEN umhisp
+                        WHEN umhisp BETWEEN 4 AND 5 THEN 4
+                        WHEN umhisp = 9 THEN 5
+                    END
+                WHEN orracem IS NOT NULL THEN
+                    CASE
+                        WHEN orracem IN (1, 2, 3) THEN orracem
+                        WHEN orracem BETWEEN 6 AND 8 THEN 0
+                        WHEN orracem BETWEEN 4 AND 5 THEN 4
+                        WHEN orracem = 9 THEN 5
+                    END
+                ELSE NULL
+            END
+
+            """)
+
+    finally:
+        con.close()
 
 
 if __name__ == "__main__":

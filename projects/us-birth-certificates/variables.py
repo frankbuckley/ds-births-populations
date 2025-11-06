@@ -237,13 +237,17 @@ class Variables(StrEnum):
     """Probability of Down syndrome live birth with terminations. Estimated from surveillance-based prevalence"""
 
 
-COMPUTED: dict[str, pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype] = {
+COMPUTED: dict[
+    str, pd.UInt16Dtype | pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype
+] = {
     str(Variables.YEAR): pd.UInt16Dtype(),
     str(Variables.MAGE_C): pd.UInt16Dtype(),
     str(Variables.DS): pd.CategoricalDtype(),
     str(Variables.P_DS_LB_NT): pd.Float64Dtype(),
     str(Variables.P_DS_LB_WT): pd.Float64Dtype(),
-    str(Variables.CA_DOWN_C): pd.CategoricalDtype(categories=["C", "P", "N", "U"], ordered=False),
+    str(Variables.CA_DOWN_C): pd.CategoricalDtype(
+        categories=["C", "P", "N", "U"], ordered=False
+    ),
     str(Variables.DOWN_IND): pd.CategoricalDtype(),
     str(Variables.DS_C): pd.CategoricalDtype(),
     str(Variables.DS_P): pd.CategoricalDtype(),
@@ -253,7 +257,17 @@ COMPUTED: dict[str, pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype]
 }
 
 IMPORTED: dict[
-    str, pd.Float64Dtype | pd.CategoricalDtype | pd.UInt16Dtype | pd.UInt32Dtype | pd.UInt64Dtype | pd.Int16Dtype | pd.Int32Dtype | pd.Int64Dtype | pd.CategoricalDtype
+    str,
+    pd.Float32Dtype
+    | pd.Float64Dtype
+    | pd.CategoricalDtype
+    | pd.UInt16Dtype
+    | pd.UInt32Dtype
+    | pd.UInt64Dtype
+    | pd.Int16Dtype
+    | pd.Int32Dtype
+    | pd.Int64Dtype
+    | pd.CategoricalDtype,
 ] = {
     str(Variables.DATAYEAR): pd.UInt16Dtype(),
     str(Variables.BIRYR): pd.UInt16Dtype(),
@@ -376,8 +390,12 @@ IMPORTED: dict[
     str(Variables.CA_CLPAL): pd.CategoricalDtype(),
     str(Variables.DOWNS): pd.CategoricalDtype(),
     str(Variables.UCA_DOWNS): pd.CategoricalDtype(),
-    str(Variables.CA_DOWN): pd.CategoricalDtype(categories=["C", "P", "N", "U"], ordered=False),
-    str(Variables.CA_DOWNS): pd.CategoricalDtype(categories=["C", "P", "N", "U"], ordered=False),
+    str(Variables.CA_DOWN): pd.CategoricalDtype(
+        categories=["C", "P", "N", "U"], ordered=False
+    ),
+    str(Variables.CA_DOWNS): pd.CategoricalDtype(
+        categories=["C", "P", "N", "U"], ordered=False
+    ),
     str(Variables.CA_DISOR): pd.CategoricalDtype(),
     str(Variables.CA_HYPO): pd.CategoricalDtype(),
     str(Variables.F_CA_LIMB): pd.CategoricalDtype(),
@@ -443,11 +461,18 @@ def set_imported_column_types(df: pd.DataFrame) -> pd.DataFrame:
     for col, dtype in IMPORTED.items():
         try:
             # importing 2005: TypeError: Cannot cast array data from dtype('float64') to dtype('uint16')
-            if (dtype == pd.UInt8Dtype()
-                    or dtype == pd.UInt16Dtype() or dtype == pd.UInt32Dtype()
-                    or dtype == pd.UInt64Dtype() or dtype == pd.Int16Dtype()
-                    or dtype == pd.Int32Dtype() or dtype == pd.Int64Dtype()):
-                df[col] = pd.to_numeric(df[col], downcast="unsigned").astype(dtype, errors="raise")
+            if (
+                dtype == pd.UInt8Dtype()
+                or dtype == pd.UInt16Dtype()
+                or dtype == pd.UInt32Dtype()
+                or dtype == pd.UInt64Dtype()
+                or dtype == pd.Int16Dtype()
+                or dtype == pd.Int32Dtype()
+                or dtype == pd.Int64Dtype()
+            ):
+                df[col] = pd.to_numeric(df[col], downcast="unsigned").astype(
+                    dtype, errors="raise"
+                )
             else:
                 df[col] = df[col].astype(dtype, errors="raise")
         except ValueError as e:

@@ -50,7 +50,7 @@ def map_mrace(row):
 
     We set `mrace_c` as follows:
 
-    - if `mrace15` is available, use `mrace6`, 1:1, 2:2, 3:3, 4-14:4, otherwise,
+    - if `mrace15` is available, use `mrace15`, 1:1, 2:2, 3:3, 4-14:4, otherwise,
     - if `mracerec` is available, use `mracerec`, 1:1, 2:2, 3:3, 4:4, otherwise,
     - if `mbrace` is available, use `mbrace`, 1:1, 2:2, 3:3, 4:4, otherwise,
     - if `mrace` is available, use `mrace`, 1:1, 2:2, 3:3, 4-78:4, otherwise,
