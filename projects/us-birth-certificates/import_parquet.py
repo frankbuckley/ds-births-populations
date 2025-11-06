@@ -37,7 +37,7 @@ def import_from_sas(source: str, year: int):
 
     print(f"Saving to data/us_births_{year}.parquet...")
 
-    df.to_parquet(f"data/us_births_{year}.parquet")
+    df.to_parquet(f"data/us_births_{year}.parquet", compression="zstd")
 
 
 if __name__ == "__main__":
