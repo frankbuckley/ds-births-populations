@@ -41,6 +41,15 @@ def combine_all() -> None:
             """
         )
 
+        print("Adding mracehisp_c column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN mracehisp_c UTINYINT
+            """
+        )
+
         print("Setting mrace_c...")
 
         con.execute(
@@ -102,6 +111,19 @@ def combine_all() -> None:
                         WHEN orracem = 9 THEN 5
                         END
                 ELSE NULL
+            END
+            """
+        )
+
+        print("Setting mracehisp_c...")
+
+        con.execute(
+            """
+            UPDATE us_births
+            SET mracehisp_c = CASE
+                WHEN mhisp_c BETWEEN 1 AND 4 THEN 5
+                WHEN mhisp_c = 5 THEN NULL
+                ELSE mrace_c
             END
             """
         )
