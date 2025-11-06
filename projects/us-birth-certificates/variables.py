@@ -8,6 +8,8 @@ from enum import StrEnum
 class Variables(StrEnum):
     DATAYEAR = "datayear"
     """Data year (older datasets have this)"""
+    BIRYR = "biryr"
+    """Birth year"""
     DOB_YY = "dob_yy"
     """Year of birth"""
     DOB_MM = "dob_mm"
@@ -33,9 +35,14 @@ class Variables(StrEnum):
     """Mother's Single Years of Age"""
     DMAGE = "dmage"
     """Mother's single year of age (pre 2004)"""
+    DMAGERPT = "dmagerpt"
+    """Reported Age of Mother"""
     MAGER41 = "mager41"
     MAGER14 = "mager14"
     MAGER9 = "mager9"
+    MAGE36 = "mage36"
+    MAGER12 = "mager12"
+    MAGER8 = "mager8"
     UMBSTATE = "umbstate"
     """Mother's Birth State"""
     MBSTATE_REC = "mbstate_rec"
@@ -43,7 +50,7 @@ class Variables(StrEnum):
     XMRSTATE = "xmrstate"
     """Expanded State of Residence of Mother"""
     MRSTATE = "mrstate"
-    """Mother’s Residence State"""
+    """Mother's Residence State"""
     RCNTY_POP = "rcnty_pop"
     """Population of Residence County"""
     RCITY_POP = "rcity_pop"
@@ -52,64 +59,84 @@ class Variables(StrEnum):
     """Metropolitan Residence County"""
     RESTATUS = "restatus"
     MBRACE = "mbrace"
-    """Mother’s Bridged Race"""
+    """Mother's Bridged Race"""
     MRACE = "mrace"
-    """Mother’s Race"""
+    """Mother's Race"""
     MRACEREC = "mracerec"
-    """Mother’s Race Recode"""
+    """Mother's Race Recode"""
     MRACE31 = "mrace31"
     MRACE6 = "mrace6"
     MRACE15 = "mrace15"
     MRACEIMP = "mraceimp"
-    """Mother’s Race Imputed"""
+    """Mother's Race Imputed"""
+    ORMOTH = "ormoth"
+    """Hispanic Origin of Mother"""
+    ORRACEM = "orracem"
+    """Hispanic Origin and Race of Mother Recode"""
     UMHISP = "umhisp"
-    """Mother’s Hispanic Origin"""
+    """Mother's Hispanic Origin"""
     MHISPX = "mhispx"
     MHISP_R = "mhisp_r"
     F_MHISP = "f_mhisp"
     MRACEHISP = "mracehisp"
-    """Mother’s Race/Hispanic Origin"""
+    """Mother's Race/Hispanic Origin"""
     MAR = "mar"
-    """Mother’s Marital Status"""
+    """Mother's Marital Status"""
     MAR_IMP = "mar_imp"
-    """Mother’s Marital Status Imputed"""
+    """Mother's Marital Status Imputed"""
     MAR_P = "mar_p"
     DMAR = "dmar"
     F_MAR_P = "f_mar_p"
+    DMEDUC = "dmeduc"
+    """Education of Mother"""
     MEDUC = "meduc"
-    """Mother’s Education"""
+    """Mother's Education"""
     UMEDUC = "umeduc"
-    """Mother’s Education"""
+    """Mother's Education"""
+    MEDUC6 = "meduc6"
+    """Education of Mother Recode"""
     MEDUC_REC = "meduc_rec"
-    """Mother’s Education Recode"""
+    """Mother's Education Recode"""
+    MPLBIR = "mplbir"
+    """Place of Birth of Mother"""
     F_MEDUC = "f_meduc"
+    DFAGE = "dfage"
+    """Age of Father"""
+    DFAGERPT = "dfagerpt"
+    """Reported Age of Father"""
+    FAGE11 = "fage11"
+    """Age of Father Recode"""
     FAGERPT = "fagerpt"
-    """Father’s Reported Age"""
+    """Father's Reported Age"""
     UFAGECOMB = "ufagecomb"
-    """Father’s Combined Age"""
+    """Father's Combined Age"""
     FAGERPT_FLG = "fagerpt_flg"
     FAGECOMB = "fagecomb"
     FAGEREC11 = "fagerec11"
-    """Father’s Age Recode 11"""
+    """Father's Age Recode 11"""
     FBRACE = "fbrace"
-    """Father’s Bridged Race"""
+    """Father's Bridged Race"""
+    ORFATH = "orfath"
+    """Hispanic Origin of Father"""
+    ORRACEF = "orracef"
+    """Hispanic Origin and Race of Father Recode"""
+    FRACE = "frace"
+    """Race of Father"""
     FRACEIMP = "fraceimp"
-    """Father’s Race Imputed"""
+    """Father's Race Imputed"""
     FRACEREC = "fracerec"
-    """Father’s Race Recode"""
+    """Father's Race Recode"""
     UFHISP = "ufhisp"
-    """Father’s Hispanic Origin"""
+    """Father's Hispanic Origin"""
     FRACEHISP = "fracehisp"
-    """Father’s Race/Hisp Origin"""
+    """Father's Race/Hisp Origin"""
     FRACE31 = "frace31"
     FRACE6 = "frace6"
     FRACE15 = "frace15"
     FHISPX = "fhispx"
     FHISP_R = "fhisp_r"
     F_FHISP = "f_fhisp"
-    """Father’s Hispanic Origin"""
-    FRACE = "frace"
-    """Father’s Race"""
+    """Father's Hispanic Origin"""
     FEDUC = "feduc"
     PRIORLIVE = "priorlive"
     """Prior Births Now Living"""
@@ -127,11 +154,15 @@ class Variables(StrEnum):
     """Year of Last Live Birth"""
     PRECARE = "precare"
     """Month Prenatal Care Began"""
+    AMNIO = "amnio"
+    """Amniocentesis"""
     PAY = "pay"
     PAY_REC = "pay_rec"
     F_PAY = "f_pay"
     F_PAY_REC = "f_pay_rec"
     SEX = "sex"
+    CONGENIT = "congenit"
+    """Congenital Anomalies"""
     CA_ANEN = "ca_anen"
     CA_MNSB = "ca_mnsb"
     CA_CCHD = "ca_cchd"
@@ -169,10 +200,25 @@ class Variables(StrEnum):
     F_TPCV = "f_tpcv"
     WIC = "wic"
     F_WIC = "f_wic"
+    BMI = "bmi"
+    """Body Mass Index"""
+    BMI_R = "bmi_r"
+    """Body Mass Index Recode"""
+    PWGT_R = "pwgt_r"
+    """Prepregnancy Weight Recode"""
+    F_PWGT = "f_pwgt"
+    """Reporting Flag for Pre-pregnancy Weight"""
+    DWGT_R = "dwgt_r"
+    """Delivery Weight Recode"""
+    F_DWGT = "f_dwgt"
+    """Reporting Flag for Delivery Weight"""
 
     YEAR = "year"
 
     MAGE_C = "mage_c"
+
+    MRACE_C = "mrace_c"
+    MHISP_C = "mhisp_c"
 
     DOWN_IND = "down_ind"  # DS indicated (DOWNS | UCA_DOWNS | CA_DOWNS | CA_DOWN)
 
@@ -210,6 +256,7 @@ IMPORTED: dict[
     str, pd.Float64Dtype | pd.CategoricalDtype | pd.UInt16Dtype | pd.UInt32Dtype | pd.UInt64Dtype | pd.Int16Dtype | pd.Int32Dtype | pd.Int64Dtype | pd.CategoricalDtype
 ] = {
     str(Variables.DATAYEAR): pd.UInt16Dtype(),
+    str(Variables.BIRYR): pd.UInt16Dtype(),
     str(Variables.DOB_YY): pd.UInt16Dtype(),
     str(Variables.DOB_MM): pd.CategoricalDtype(),
     str(Variables.OSTATE): pd.CategoricalDtype(),
@@ -224,9 +271,13 @@ IMPORTED: dict[
     str(Variables.MAGE_REPFLG): pd.CategoricalDtype(),
     str(Variables.MAGER): pd.CategoricalDtype(),
     str(Variables.DMAGE): pd.CategoricalDtype(),
+    str(Variables.DMAGERPT): pd.CategoricalDtype(),
     str(Variables.MAGER41): pd.CategoricalDtype(),
     str(Variables.MAGER14): pd.CategoricalDtype(),
     str(Variables.MAGER9): pd.CategoricalDtype(),
+    str(Variables.MAGE36): pd.CategoricalDtype(),
+    str(Variables.MAGER12): pd.CategoricalDtype(),
+    str(Variables.MAGER8): pd.CategoricalDtype(),
     str(Variables.UMBSTATE): pd.CategoricalDtype(),
     str(Variables.MBSTATE_REC): pd.CategoricalDtype(),
     str(Variables.XMRSTATE): pd.CategoricalDtype(),
@@ -242,6 +293,8 @@ IMPORTED: dict[
     str(Variables.MRACE6): pd.CategoricalDtype(),
     str(Variables.MRACE15): pd.CategoricalDtype(),
     str(Variables.MRACEIMP): pd.CategoricalDtype(),
+    str(Variables.ORMOTH): pd.CategoricalDtype(),
+    str(Variables.ORRACEM): pd.CategoricalDtype(),
     str(Variables.UMHISP): pd.CategoricalDtype(),
     str(Variables.MHISPX): pd.CategoricalDtype(),
     str(Variables.MHISP_R): pd.CategoricalDtype(),
@@ -252,16 +305,24 @@ IMPORTED: dict[
     str(Variables.MAR_P): pd.CategoricalDtype(),
     str(Variables.DMAR): pd.CategoricalDtype(),
     str(Variables.F_MAR_P): pd.CategoricalDtype(),
+    str(Variables.DMEDUC): pd.CategoricalDtype(),
     str(Variables.MEDUC): pd.CategoricalDtype(),
     str(Variables.UMEDUC): pd.CategoricalDtype(),
+    str(Variables.MEDUC6): pd.CategoricalDtype(),
     str(Variables.MEDUC_REC): pd.CategoricalDtype(),
+    str(Variables.MPLBIR): pd.CategoricalDtype(),
     str(Variables.F_MEDUC): pd.CategoricalDtype(),
+    str(Variables.DFAGE): pd.CategoricalDtype(),
+    str(Variables.DFAGERPT): pd.CategoricalDtype(),
+    str(Variables.FAGE11): pd.CategoricalDtype(),
     str(Variables.FAGERPT): pd.CategoricalDtype(),
     str(Variables.UFAGECOMB): pd.CategoricalDtype(),
     str(Variables.FAGERPT_FLG): pd.CategoricalDtype(),
     str(Variables.FAGECOMB): pd.CategoricalDtype(),
     str(Variables.FAGEREC11): pd.CategoricalDtype(),
     str(Variables.FBRACE): pd.CategoricalDtype(),
+    str(Variables.ORFATH): pd.CategoricalDtype(),
+    str(Variables.ORRACEF): pd.CategoricalDtype(),
     str(Variables.FRACEIMP): pd.CategoricalDtype(),
     str(Variables.FRACEREC): pd.CategoricalDtype(),
     str(Variables.UFHISP): pd.CategoricalDtype(),
@@ -284,6 +345,7 @@ IMPORTED: dict[
     str(Variables.DLLB_MM): pd.CategoricalDtype(),
     str(Variables.DLLB_YY): pd.CategoricalDtype(),
     str(Variables.PRECARE): pd.CategoricalDtype(),
+    str(Variables.AMNIO): pd.CategoricalDtype(),
     str(Variables.PAY): pd.CategoricalDtype(),
     str(Variables.PAY_REC): pd.CategoricalDtype(),
     str(Variables.F_PAY): pd.CategoricalDtype(),
@@ -296,6 +358,7 @@ IMPORTED: dict[
     str(Variables.WIC): pd.CategoricalDtype(),
     str(Variables.F_WIC): pd.CategoricalDtype(),
     str(Variables.SEX): pd.CategoricalDtype(),
+    str(Variables.CONGENIT): pd.CategoricalDtype(),
     str(Variables.CA_ANEN): pd.CategoricalDtype(),
     str(Variables.CA_MNSB): pd.CategoricalDtype(),
     str(Variables.CA_CCHD): pd.CategoricalDtype(),
@@ -325,6 +388,19 @@ IMPORTED: dict[
     str(Variables.F_CA_DISOR): pd.CategoricalDtype(),
     str(Variables.F_CA_HYPO): pd.CategoricalDtype(),
     str(Variables.NO_CONGEN): pd.CategoricalDtype(),
+    str(Variables.F_MPCB): pd.CategoricalDtype(),
+    str(Variables.PRECARE5): pd.CategoricalDtype(),
+    str(Variables.PREVIS): pd.CategoricalDtype(),
+    str(Variables.PREVIS_REC): pd.CategoricalDtype(),
+    str(Variables.F_TPCV): pd.CategoricalDtype(),
+    str(Variables.WIC): pd.CategoricalDtype(),
+    str(Variables.F_WIC): pd.CategoricalDtype(),
+    str(Variables.BMI): pd.Float32Dtype(),
+    str(Variables.BMI_R): pd.CategoricalDtype(),
+    str(Variables.PWGT_R): pd.CategoricalDtype(),
+    str(Variables.F_PWGT): pd.CategoricalDtype(),
+    str(Variables.DWGT_R): pd.CategoricalDtype(),
+    str(Variables.F_DWGT): pd.CategoricalDtype(),
 }
 
 COMPUTED_VARS = list(COMPUTED.keys())

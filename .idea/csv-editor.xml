@@ -3,13 +3,6 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
-        <entry key="\dumpDataPreview">
-          <value>
-            <Attribute>
-              <option name="separator" value="&#9;" />
-            </Attribute>
-          </value>
-        </entry>
         <entry key="\projects\us-birth-certificates\us-births-estimated-prevalence-ethnicity-2000-2023.csv">
           <value>
             <Attribute>
