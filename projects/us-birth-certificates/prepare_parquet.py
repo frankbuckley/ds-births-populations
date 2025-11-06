@@ -1,7 +1,12 @@
 import chance
 import pyarrow as pa
 import pandas as pd
-from data_utils import constrain_pa_series_to_uint8, constrain_pa_series_to_uint16, map_mrace, map_mhisp
+from data_utils import (
+    constrain_pa_series_to_uint8,
+    constrain_pa_series_to_uint16,
+    map_mrace,
+    map_mhisp,
+)
 from variables import Variables as vars
 
 print("Reading parquet file...")
@@ -22,7 +27,9 @@ df[vars.BFACIL] = constrain_pa_series_to_uint8(df[vars.BFACIL], min=1, max=9)
 df[vars.F_BFACIL] = constrain_pa_series_to_uint8(df[vars.F_BFACIL], min=0, max=1)
 df[vars.UMAGERPT] = constrain_pa_series_to_uint8(df[vars.UMAGERPT])
 df[vars.MAGE_IMPFLG] = constrain_pa_series_to_uint8(df[vars.MAGE_IMPFLG], min=0, max=1)
-df[vars.MAGE_REPFLG] = constrain_pa_series_to_uint8(pd.to_numeric(df[vars.MAGE_REPFLG], errors="coerce"), min=0, max=1)
+df[vars.MAGE_REPFLG] = constrain_pa_series_to_uint8(
+    pd.to_numeric(df[vars.MAGE_REPFLG], errors="coerce"), min=0, max=1
+)
 df[vars.MAGER] = constrain_pa_series_to_uint8(df[vars.MAGER], min=12, max=50)
 df[vars.DMAGE] = constrain_pa_series_to_uint8(df[vars.DMAGE])
 df[vars.DMAGERPT] = constrain_pa_series_to_uint8(df[vars.DMAGERPT])
@@ -165,17 +172,17 @@ print("Setting 'down_ind'")
 # 1: Down syndrome (DOWNS = 1, CA_DOWNS = C or P, CA_DOWN = C or P)
 df = df.assign(
     down_ind=(
-            (df[vars.DOWNS].eq(1))
-            | (df[vars.UCA_DOWNS].eq(1))
-            | (df[vars.CA_DOWN_C].isin(["C", "P"]))
-    ).astype("UInt8")  # convert True/False → 1.0/0.0
+        (df[vars.DOWNS].eq(1))
+        | (df[vars.UCA_DOWNS].eq(1))
+        | (df[vars.CA_DOWN_C].isin(["C", "P"]))
+    ).astype(
+        "UInt8"
+    )  # convert True/False → 1.0/0.0
 )
 
 df.loc[
-    (df[vars.DOWNS].eq(2))
-    | (df[vars.DOWNS].eq(2))
-    | (df[vars.CA_DOWN_C].eq("N")),
-    "down_ind"
+    (df[vars.DOWNS].eq(2)) | (df[vars.DOWNS].eq(2)) | (df[vars.CA_DOWN_C].eq("N")),
+    "down_ind",
 ] = 0
 
 print("Setting 'mage_c'")
@@ -184,61 +191,57 @@ print("Setting 'mage_c'")
 # "This item is: a) computed using dates of birth of mother and of delivery;
 # b) reported; or c) imputed. This is the age item used in NCHS publications"
 # In 2003: MAGER41: 01 = <15, 02 = 15, 41 = 54
-df[vars.MAGE_C] = df[vars.MAGER].combine_first(df[vars.DMAGE].combine_first(df[vars.MAGER41] + 13))
-
-# print("Mapping 'mrace_c'")
-
-# df[vars.MRACE_C] = df.apply(map_mrace, axis=1)
-
-# print("Mapping 'mhisp_c'")
-
-# df[vars.MHISP_C] = df.apply(map_mhisp, axis=1)
+df[vars.MAGE_C] = df[vars.MAGER].combine_first(
+    df[vars.DMAGE].combine_first(df[vars.MAGER41] + 13)
+)
 
 print("Setting 'p_ds_lb_nt'")
 
 df[vars.P_DS_LB_NT] = chance.get_ds_lb_nt_probability_array(df[vars.MAGE_C])
 
-prevalence_df = pd.DataFrame({
-    str(vars.YEAR): list(range(1989, 2025)),
-    str(vars.P_DS_LB_WT): [
-        0.001038,
-        0.001055,
-        0.001077,
-        0.001083,
-        0.001093,
-        0.001102,
-        0.001121,
-        0.001099,
-        0.001124,
-        0.001136,
-        0.001153,
-        0.001149,
-        0.001179,
-        0.001216,
-        0.001219,
-        0.001218,
-        0.001236,
-        0.001244,
-        0.001261,
-        0.001257,
-        0.001262,
-        0.001244,
-        0.00127,
-        0.001265,
-        0.001283,
-        0.001302,
-        0.001265051,
-        0.001295784,
-        0.0013375,
-        0.001324215,
-        0.001324215,
-        0.001324215,
-        0.001324215,
-        0.001324215,
-        0.001324215,
-        0.001324215,
-    ],
-})
+prevalence_df = pd.DataFrame(
+    {
+        str(vars.YEAR): list(range(1989, 2025)),
+        str(vars.P_DS_LB_WT): [
+            0.001038,
+            0.001055,
+            0.001077,
+            0.001083,
+            0.001093,
+            0.001102,
+            0.001121,
+            0.001099,
+            0.001124,
+            0.001136,
+            0.001153,
+            0.001149,
+            0.001179,
+            0.001216,
+            0.001219,
+            0.001218,
+            0.001236,
+            0.001244,
+            0.001261,
+            0.001257,
+            0.001262,
+            0.001244,
+            0.00127,
+            0.001265,
+            0.001283,
+            0.001302,
+            0.001265051,
+            0.001295784,
+            0.0013375,
+            0.001324215,
+            0.001324215,
+            0.001324215,
+            0.001324215,
+            0.001324215,
+            0.001324215,
+            0.001324215,
+        ],
+    }
+)
 
 print("Setting 'p_ds_lb_wt'")
 
@@ -246,4 +249,4 @@ df = df.merge(prevalence_df, on=vars.YEAR, how="left")
 
 print("Writing file...")
 
-df.to_parquet("./data/us_births.parquet")
+df.to_parquet("./data/us_births.parquet", compression="zstd")
