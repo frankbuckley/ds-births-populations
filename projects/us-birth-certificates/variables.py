@@ -230,11 +230,41 @@ class Variables(StrEnum):
     DS_U = "ds_u"
     DS_CORP = "ds_corp"
 
-    P_DS_LB_NT = "p_ds_lb_nt"
-    """Probability of Down syndrome live birth absent terminations. Estimated from maternal age using Morris formula."""
-
     P_DS_LB_WT = "p_ds_lb_wt"
-    """Probability of Down syndrome live birth with terminations. Estimated from surveillance-based prevalence"""
+    """
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    prevalence for the given year with no additional adjustments (for maternal age or ethnicity).
+    """
+
+    P_DS_LB_NT = "p_ds_lb_nt"
+    """
+    Probability of Down syndrome live birth absent terminations. Estimated from maternal age 
+    using Morris formula.
+    """
+
+    P_DS_LB_WT_MAGE = "p_ds_lb_wt_mage"
+    """
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    prevalence for the given year and maternal age.
+    """
+
+    P_DS_LB_NT_MAGE = "p_ds_lb_nt_mage"
+    """
+    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based 
+    prevalence for the given year and maternal age.
+    """
+
+    P_DS_LB_WT_ETHN = "p_ds_lb_wt_ethn"
+    """
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    prevalence for the given year and ethnicity.
+    """
+
+    P_DS_LB_NT_ETHN = "p_ds_lb_nt_ethn"
+    """
+    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based 
+    prevalence for the given year and ethnicity.
+    """
 
 
 COMPUTED: dict[
@@ -254,6 +284,12 @@ COMPUTED: dict[
     str(Variables.DS_N): pd.CategoricalDtype(),
     str(Variables.DS_U): pd.CategoricalDtype(),
     str(Variables.DS_CORP): pd.CategoricalDtype(),
+    str(Variables.P_DS_LB_WT): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_NT): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_WT_MAGE): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_NT_MAGE): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_WT_ETHN): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_NT_ETHN): pd.Float64Dtype(),
 }
 
 IMPORTED: dict[

@@ -1,4 +1,5 @@
 import pathlib
+import pandas as pd
 import duckdb
 
 
@@ -125,6 +126,70 @@ def combine_all() -> None:
                 WHEN mhisp_c = 5 THEN NULL
                 ELSE mrace_c
             END
+            """
+        )
+
+        print("Adding p_ds_lb_wt_mage column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN p_ds_lb_wt_mage DOUBLE
+            """
+        )
+
+        print("Adding p_ds_lb_nt_mage column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN p_ds_lb_nt_mage DOUBLE
+            """
+        )
+
+        print("Adding p_ds_lb_wt_ethn column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN p_ds_lb_wt_ethn DOUBLE
+            """
+        )
+
+        print("Adding p_ds_lb_nt_ethn column")
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN p_ds_lb_nt_ethn DOUBLE
+            """
+        )
+
+        print("Reading us-births-estimated-prevalence-maternal-age-1989-2018.csv")
+
+        prev_est_age_df = pd.read_csv(
+            "./us-births-estimated-prevalence-maternal-age-1989-2018.csv"
+        ).convert_dtypes()
+
+        con.execute("DROP TABLE IF EXISTS us_births_est_prevalence_age;")
+        con.execute(
+            """
+            CREATE TABLE us_births_est_prevalence_age AS
+            SELECT * FROM prev_est_age_df
+            """
+        )
+
+        print("Setting p_ds_lb_wt_mage...")
+
+        con.execute(
+            """
+            UPDATE us_births AS b
+            SET p_ds_lb_wt_mage =
+                    CASE
+                        WHEN b.mage_c < 35 THEN e.p_ds_lb_wt_lt35_sv
+                        ELSE e.p_ds_lb_wt_gte35_sv
+                        END FROM us_births_est_prevalence_age AS e
+            WHERE b.year = e.year;
             """
         )
 
