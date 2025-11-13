@@ -36,7 +36,6 @@ axes.axisbelow: True
 
 lines.solid_capstyle: round
 
-# === Grid line style ===
 axes.grid: True
 axes.grid.which: major
 axes.facecolor: white
