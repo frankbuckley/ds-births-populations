@@ -21,6 +21,10 @@ axes.titleweight: bold
 axes.labelweight: bold
 axes.labelcolor: "#333333"
 axes.axisbelow: True
+
+
+lines.solid_capstyle: round
+
 axes.grid: True
 axes.grid.which: major
 axes.facecolor: white
