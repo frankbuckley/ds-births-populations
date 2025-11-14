@@ -1,7 +1,7 @@
 import pathlib
 import pandas as pd
 import duckdb
-
+from variables import Variables as vars
 
 def combine_all() -> None:
     src_dir = pathlib.Path("data")
@@ -150,18 +150,18 @@ def combine_all() -> None:
         print("Adding p_ds_lb_wt_ethn column")
 
         con.execute(
-            """
+            f"""
             ALTER TABLE us_births
-                ADD COLUMN p_ds_lb_wt_ethn DOUBLE
+                ADD COLUMN {vars.P_DS_LB_WT_ETHN} DOUBLE
             """
         )
 
         print("Adding p_ds_lb_nt_ethn column")
 
         con.execute(
-            """
+            f"""
             ALTER TABLE us_births
-                ADD COLUMN p_ds_lb_nt_ethn DOUBLE
+                ADD COLUMN {vars.P_DS_LB_NT_ETHN} DOUBLE
             """
         )
 
@@ -190,6 +190,20 @@ def combine_all() -> None:
                         ELSE e.p_ds_lb_wt_gte35_sv
                         END FROM us_births_est_prevalence_age AS e
             WHERE b.year = e.year;
+            """
+        )
+
+        print("Reading us-births-reduction-rates-1989-2024.csv")
+
+        reduction_df = pd.read_csv(
+            "./us-births-reduction-rates-1989-2024.csv"
+        ).convert_dtypes()
+
+        con.execute("DROP TABLE IF EXISTS reduction_rate_year;")
+        con.execute(
+            """
+            CREATE TABLE reduction_rate_year AS
+            SELECT * FROM reduction_df
             """
         )
 
