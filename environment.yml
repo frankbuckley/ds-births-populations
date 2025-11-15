@@ -8,6 +8,7 @@ dependencies:
   - blackjax
   - duckdb
   - fastparquet
+  - formulaic
   - graphviz
   - ipython
   - jax
@@ -29,6 +30,7 @@ dependencies:
   - pyxlsb
   - scikit-learn
   - scipy
+  - scipy-stubs
   - seaborn
   - statsmodels
   - tabulate
