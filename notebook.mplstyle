@@ -5,25 +5,22 @@ figure.constrained_layout.use: True
 
 font.family: sans-serif
 font.sans-serif: "Aptos Narrow", "Noto Sans Condensed", Aptos, "Helvetica Neue", Arial, Helvetica, DejaVu Sans
-font.size: 9
+font.size: 10
 
 text.color: "#333333"
 
 image.cmap: tab10
 pcolormesh.snap: True
 
-figure.titlesize: 9
+figure.titlesize: 10
 figure.titleweight: bold
 
-axes.labelsize: 9
-axes.titlesize: 9
+axes.labelsize: 10
+axes.titlesize: 10
 axes.titleweight: bold
 axes.labelweight: bold
 axes.labelcolor: "#333333"
 axes.axisbelow: True
-
-
-lines.solid_capstyle: round
 
 axes.grid: True
 axes.grid.which: major
@@ -36,8 +33,8 @@ grid.color: "#c0c0c0"
 grid.linewidth: 0.25
 grid.alpha: 1
 
-xtick.labelsize: 9
-ytick.labelsize: 9
+xtick.labelsize: 10
+ytick.labelsize: 10
 xtick.color:  "#333333"
 ytick.color:  "#333333"
 xtick.direction: out
@@ -55,8 +52,8 @@ patch.edgecolor: "#ffffffff"
 patch.linewidth: 0.75
 patch.antialiased: True
 
-legend.fontsize: 9
-legend.title_fontsize: 9
+legend.fontsize: 10
+legend.title_fontsize: 10
 legend.frameon: True
 legend.numpoints: 1
 legend.scatterpoints: 1
