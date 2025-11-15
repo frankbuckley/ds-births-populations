@@ -1,4 +1,4 @@
-figure.figsize: 6,4
+figure.figsize: 8,6
 figure.dpi: 120.0
 figure.facecolor: white
 figure.constrained_layout.use: True
@@ -21,7 +21,6 @@ axes.titleweight: bold
 axes.labelweight: bold
 axes.labelcolor: "#333333"
 axes.axisbelow: True
-
 axes.grid: True
 axes.grid.which: major
 axes.facecolor: white
