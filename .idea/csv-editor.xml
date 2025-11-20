@@ -24,6 +24,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\projects\us-birth-certificates\us-births-reduction-rates-1989-2024.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>
