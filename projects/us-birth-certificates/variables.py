@@ -28,6 +28,8 @@ class Variables(StrEnum):
     """Birth place"""
     F_BFACIL = "f_bfacil"
     """Reporting flag for birth place"""
+    BFACIL3 = "bfacil3"
+    """Birth place recode"""
     UMAGERPT = "umagerpt"
     """Mother's reported age"""
     MAGE_IMPFLG = "mage_impflg"
@@ -330,6 +332,7 @@ IMPORTED: dict[
     str(Variables.OCNTYPOP): pd.CategoricalDtype(),
     str(Variables.BFACIL): pd.CategoricalDtype(),
     str(Variables.F_BFACIL): pd.CategoricalDtype(),
+    str(Variables.BFACIL3): pd.CategoricalDtype(),
     str(Variables.UMAGERPT): pd.CategoricalDtype(),
     str(Variables.MAGE_IMPFLG): pd.CategoricalDtype(),
     str(Variables.MAGE_REPFLG): pd.CategoricalDtype(),
