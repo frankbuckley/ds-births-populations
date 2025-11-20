@@ -165,13 +165,21 @@ def combine_all() -> None:
             """
         )
 
+        print("Adding p_ds_lb_wt_mage_reduc column")
+
+        con.execute(
+            f"""
+            ALTER TABLE us_births
+                ADD COLUMN {vars.P_DS_LB_WT_MAGE_REDUC} DOUBLE
+            """
+        )
+
         print("Reading us-births-estimated-prevalence-maternal-age-1989-2018.csv")
 
         prev_est_age_df = pd.read_csv(
             "./us-births-estimated-prevalence-maternal-age-1989-2018.csv"
         ).convert_dtypes()
 
-        con.execute("DROP TABLE IF EXISTS us_births_est_prevalence_age;")
         con.execute(
             """
             CREATE TABLE us_births_est_prevalence_age AS
@@ -199,11 +207,64 @@ def combine_all() -> None:
             "./us-births-reduction-rates-1989-2024.csv"
         ).convert_dtypes()
 
-        con.execute("DROP TABLE IF EXISTS reduction_rate_year;")
+        print("Creating table reduction_rate_year")
+
         con.execute(
             """
             CREATE TABLE reduction_rate_year AS
             SELECT * FROM reduction_df
+            """
+        )
+
+        # set reduction rates
+        print("Setting p_ds_lb_wt_mage_reduc")
+
+        con.execute(
+            """
+            UPDATE us_births AS b
+            SET p_ds_lb_wt_mage_reduc = b.p_ds_lb_nt * (1 - r.reduction)
+            FROM reduction_rate_year AS r
+            WHERE b.year = r.year;
+            """
+        )
+
+        print("Reading us-births-ds-rec-weights.csv")
+
+        weights_df = pd.read_csv("./us-births-ds-rec-weights.csv").convert_dtypes()
+
+        print("Creating table ds_rec_weights")
+
+        con.execute(
+            """
+            CREATE TABLE ds_rec_weights AS
+            SELECT * FROM weights_df
+            """
+        )
+
+        con.execute(
+            """
+            ALTER TABLE us_births
+                ADD COLUMN ds_case_weight DOUBLE
+            """
+        )
+
+        print ("Setting ds_rec_weight")
+
+        con.execute(
+            """
+            UPDATE us_births AS b
+            SET ds_case_weight =
+                    CASE
+                        WHEN b.down_ind = 1 AND b.mracehisp_c = 1 THEN w.nhw
+                        WHEN b.down_ind = 1 AND b.mracehisp_c = 2 THEN w.nhb
+                        WHEN b.down_ind = 1 AND b.mracehisp_c = 3 THEN w.ai_an
+                        WHEN b.down_ind = 1 AND b.mracehisp_c = 4 THEN w.as_pi
+                        WHEN b.down_ind = 1 AND b.mracehisp_c = 5 THEN w.his
+                        WHEN b.down_ind = 1 THEN w.total
+                        ELSE 0
+                        END
+            FROM ds_rec_weights AS w
+            WHERE b.year = w.year;
             """
         )
 
