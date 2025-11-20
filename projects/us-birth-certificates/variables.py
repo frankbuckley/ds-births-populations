@@ -14,6 +14,8 @@ class Variables(StrEnum):
     """Year of birth"""
     DOB_MM = "dob_mm"
     """Month of birth"""
+    DOB_WK = "dob_wk"
+    """Birth day of week"""
     OSTATE = "ostate"
     """Occurrence state"""
     XOSTATE = "xostate"
@@ -85,8 +87,11 @@ class Variables(StrEnum):
     MAR_IMP = "mar_imp"
     """Mother's Marital Status Imputed"""
     MAR_P = "mar_p"
+    """Paternity Acknowledged"""
     DMAR = "dmar"
+    """Marital Status"""
     F_MAR_P = "f_mar_p"
+    """Reporting Flag for Paternity Acknowled"""
     DMEDUC = "dmeduc"
     """Education of Mother"""
     MEDUC = "meduc"
@@ -266,6 +271,13 @@ class Variables(StrEnum):
     prevalence for the given year and ethnicity.
     """
 
+    P_DS_LB_WT_MAGE_REDUC = "p_ds_lb_wt_mage_reduc"
+    """
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    reduction rate for the given year applied to probability of DS live birth absent terminations,
+    estimated from maternal age (P_DS_LB_NT * reduc_rate[year]).
+    """
+
 
 COMPUTED: dict[
     str, pd.UInt16Dtype | pd.Float64Dtype | pd.CategoricalDtype | pd.CategoricalDtype
@@ -290,6 +302,7 @@ COMPUTED: dict[
     str(Variables.P_DS_LB_NT_MAGE): pd.Float64Dtype(),
     str(Variables.P_DS_LB_WT_ETHN): pd.Float64Dtype(),
     str(Variables.P_DS_LB_NT_ETHN): pd.Float64Dtype(),
+    str(Variables.P_DS_LB_WT_MAGE_REDUC): pd.Float64Dtype(),
 }
 
 IMPORTED: dict[
@@ -309,6 +322,7 @@ IMPORTED: dict[
     str(Variables.BIRYR): pd.UInt16Dtype(),
     str(Variables.DOB_YY): pd.UInt16Dtype(),
     str(Variables.DOB_MM): pd.CategoricalDtype(),
+    str(Variables.DOB_WK): pd.CategoricalDtype(),
     str(Variables.OSTATE): pd.CategoricalDtype(),
     str(Variables.XOSTATE): pd.CategoricalDtype(),
     str(Variables.XOSTATE): pd.CategoricalDtype(),
