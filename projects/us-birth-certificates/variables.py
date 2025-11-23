@@ -215,6 +215,12 @@ class Variables(StrEnum):
     """Prepregnancy Weight Recode"""
     F_PWGT = "f_pwgt"
     """Reporting Flag for Pre-pregnancy Weight"""
+    DBWT = "dbwt"
+    """Delivery Weight (grams)"""
+    BWTR12 = "bwtr12"
+    """Birth Weight Recode 12"""
+    BWTR4 = "bwtr4"
+    """Birth Weight Recode 4"""
     DWGT_R = "dwgt_r"
     """Delivery Weight Recode"""
     F_DWGT = "f_dwgt"
@@ -470,6 +476,9 @@ IMPORTED: dict[
     str(Variables.BMI_R): pd.CategoricalDtype(),
     str(Variables.PWGT_R): pd.CategoricalDtype(),
     str(Variables.F_PWGT): pd.CategoricalDtype(),
+    str(Variables.DBWT): pd.CategoricalDtype(),
+    str(Variables.BWTR12): pd.CategoricalDtype(),
+    str(Variables.BWTR4): pd.CategoricalDtype(),
     str(Variables.DWGT_R): pd.CategoricalDtype(),
     str(Variables.F_DWGT): pd.CategoricalDtype(),
 }

@@ -33,6 +33,7 @@ dependencies:
   - scipy
   - scipy-stubs
   - seaborn
+  - shap
   - statsmodels
   - tabulate
   - xarray
