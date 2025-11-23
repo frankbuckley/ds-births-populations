@@ -155,6 +155,18 @@ class Variables(StrEnum):
     TBO = "tbo"
     """Total Birth Order"""
     TBO_REC = "tbo_rec"
+    ILLB_R = "illb_r"
+    """Interval Since Last Live Birth Recode"""
+    ILLB_R11 = "illb_r11"
+    """Interval Since Last Live Birth Recode 11"""
+    ILOP_R = "ilop_r"
+    """Interval Since Last Other Pregnancy Recode"""
+    ILOP_R11 = "ilop_r11"
+    """Interval Since Last Other Pregnancy Recode 11"""
+    ILP_R = "ilp_r"
+    """Interval Since Last Pregnancy Recode"""
+    ILP_R11 = "ilp_r11"
+    """Interval Since Last Pregnancy Recode 11"""
     DLLB_MM = "dllb_mm"
     """Month of Last Live Birth"""
     DLLB_YY = "dllb_yy"
@@ -167,7 +179,64 @@ class Variables(StrEnum):
     PAY_REC = "pay_rec"
     F_PAY = "f_pay"
     F_PAY_REC = "f_pay_rec"
+    APGAR5 = "apgar5"
+    """5-Minute Apgar Score"""
+    APGAR5R = "apgar5r"
+    """5-Minute Apgar Score Recode"""
+    F_APGAR5 = "f_apgar5"
+    """Reporting Flag for 5-Minute Apgar Score"""
+    APGAR10 = "apgar10"
+    """10-Minute Apgar Score"""
+    APGAR10R = "apgar10r"
+    """10-Minute Apgar Score Recode"""
+    DPLURAL = "dplural"
+    """Plurality recode"""
+    IMP_PLURAL = "imp_plural"
+    """Plurality Imputed"""
+    SETORDER_R = "setorder_r"
+    """Set Order Recode"""
     SEX = "sex"
+    """Sex of Infant"""
+    IMP_SEX = "imp_sex"
+    """Imputed Sex of Infant"""
+    COMBGEST = "combgest"
+    """Combined Gestation - Detail in Weeks"""
+    GESTREC10 = "gestrec10"
+    """Combined Gestation Recode 10"""
+    GESTREC3 = "gestrec3"
+    """Combined Gestation Recode 3"""
+    LMPUSED = "lmpused"
+    """Combined Gestation Used Flag"""
+    OEGEST_COMB = "oegest_comb"
+    """Obstetric Estimate Edited"""
+    OEGEST_R10 = "oegest_r10"
+    """Obstetric Estimate Recode 10"""
+    OEGEST_R3 = "oegest_r3"
+    """Obstetric Estimate Recode 3"""
+    DBWT = "dbwt"
+    """Delivery Weight (grams)"""
+    BWTR12 = "bwtr12"
+    """Birth Weight Recode 12"""
+    BWTR4 = "bwtr4"
+    """Birth Weight Recode 4"""
+    DWGT_R = "dwgt_r"
+    """Delivery Weight Recode"""
+    F_DWGT = "f_dwgt"
+    """Reporting Flag for Delivery Weight"""
+    AB_AVEN1 = "ab_aven1"
+    """Assisted Ventilation (immediately)"""
+    AB_AVEN6 = "ab_aven6"
+    """Assisted Ventilation > 6 hrs"""
+    AB_NICU = "ab_nicu"
+    """Admitted to NICU"""
+    AB_SURF = "ab_surf"
+    """Surfactant"""
+    AB_ANTI = "ab_anti"
+    """Antibiotics for Newborn"""
+    AB_SEIZ = "ab_seiz"
+    """Seizures"""
+    NO_ABNORM = "no_abnorm"
+    """No Abnormal Conditions Checked"""
     CONGENIT = "congenit"
     """Congenital Anomalies"""
     CA_ANEN = "ca_anen"
@@ -200,6 +269,8 @@ class Variables(StrEnum):
     F_CA_DISOR = "f_ca_chrom"
     F_CA_HYPO = "f_ca_hypos"
     NO_CONGEN = "no_congen"
+    BFED = "bfed"
+    """Breastfed at Discharge"""
     F_MPCB = "f_mpcb"
     PRECARE5 = "precare5"
     PREVIS = "previs"
@@ -207,6 +278,8 @@ class Variables(StrEnum):
     F_TPCV = "f_tpcv"
     WIC = "wic"
     F_WIC = "f_wic"
+    M_HT_IN = "m_ht_in"
+    """Mother's Height in Inches"""
     BMI = "bmi"
     """Body Mass Index"""
     BMI_R = "bmi_r"
@@ -215,16 +288,38 @@ class Variables(StrEnum):
     """Prepregnancy Weight Recode"""
     F_PWGT = "f_pwgt"
     """Reporting Flag for Pre-pregnancy Weight"""
-    DBWT = "dbwt"
-    """Delivery Weight (grams)"""
-    BWTR12 = "bwtr12"
-    """Birth Weight Recode 12"""
-    BWTR4 = "bwtr4"
-    """Birth Weight Recode 4"""
-    DWGT_R = "dwgt_r"
-    """Delivery Weight Recode"""
-    F_DWGT = "f_dwgt"
-    """Reporting Flag for Delivery Weight"""
+    WTGAIN = "wtgain"
+    """Weight Gain"""
+    WTGAIN_REC = "wtgain_rec"
+    """Weight Gain Recode"""
+    RF_PPTERM = "rf_ppterm"
+    """Previous Preterm Birth"""
+    RF_INFTRM = "rf_inftrm"
+    """Infertility Treatment Used"""
+    RF_FEDRG = "rf_fedrg"
+    """Fertility Drug Use"""
+    RF_ARTEC = "rf_artec"
+    """Assisted Reproductive Technology"""
+    RF_CESARE = "rf_cesaree"
+    """Previous Cesarean"""
+    NO_RISKS = "no_risks"
+    """No Risk Factors Reported"""
+    LD_INDL = "ld_indl"
+    """Induction of Labor"""
+    LD_AUGM = "ld_augm"
+    """Augmentation of Labor"""
+    ME_PRES = "me_pres"
+    """Fetal Presentation at Delivery"""
+    ME_ROUTE = "me_route"
+    """Final Route & Method of Delivery"""
+    ME_TRIAL = "me_trial"
+    """Trial of Labor Attempted"""
+    RDMETH_REC = "rdmeth_rec"
+    """Delivery Method Recode"""
+    DMETH_REC = "dmeth_rec"
+    """Delivery Method Recode"""
+    ATTEND = "attendant"
+    """Attendant at Birth"""
 
     YEAR = "year"
 
@@ -415,6 +510,12 @@ IMPORTED: dict[
     str(Variables.LBO_REC): pd.CategoricalDtype(),
     str(Variables.TBO): pd.CategoricalDtype(),
     str(Variables.TBO_REC): pd.CategoricalDtype(),
+    str(Variables.ILLB_R): pd.CategoricalDtype(),
+    str(Variables.ILLB_R11): pd.CategoricalDtype(),
+    str(Variables.ILOP_R): pd.CategoricalDtype(),
+    str(Variables.ILOP_R11): pd.CategoricalDtype(),
+    str(Variables.ILP_R): pd.CategoricalDtype(),
+    str(Variables.ILP_R11): pd.CategoricalDtype(),
     str(Variables.DLLB_MM): pd.CategoricalDtype(),
     str(Variables.DLLB_YY): pd.CategoricalDtype(),
     str(Variables.PRECARE): pd.CategoricalDtype(),
@@ -423,6 +524,14 @@ IMPORTED: dict[
     str(Variables.PAY_REC): pd.CategoricalDtype(),
     str(Variables.F_PAY): pd.CategoricalDtype(),
     str(Variables.F_PAY_REC): pd.CategoricalDtype(),
+    str(Variables.APGAR5): pd.CategoricalDtype(),
+    str(Variables.APGAR5R): pd.CategoricalDtype(),
+    str(Variables.F_APGAR5): pd.CategoricalDtype(),
+    str(Variables.APGAR10): pd.CategoricalDtype(),
+    str(Variables.APGAR10R): pd.CategoricalDtype(),
+    str(Variables.DPLURAL): pd.CategoricalDtype(),
+    str(Variables.IMP_PLURAL): pd.CategoricalDtype(),
+    str(Variables.SETORDER_R): pd.CategoricalDtype(),
     str(Variables.F_MPCB): pd.CategoricalDtype(),
     str(Variables.PRECARE5): pd.CategoricalDtype(),
     str(Variables.PREVIS): pd.CategoricalDtype(),
@@ -431,6 +540,26 @@ IMPORTED: dict[
     str(Variables.WIC): pd.CategoricalDtype(),
     str(Variables.F_WIC): pd.CategoricalDtype(),
     str(Variables.SEX): pd.CategoricalDtype(),
+    str(Variables.IMP_SEX): pd.CategoricalDtype(),
+    str(Variables.COMBGEST): pd.CategoricalDtype(),
+    str(Variables.GESTREC10): pd.CategoricalDtype(),
+    str(Variables.GESTREC3): pd.CategoricalDtype(),
+    str(Variables.LMPUSED): pd.CategoricalDtype(),
+    str(Variables.OEGEST_COMB): pd.CategoricalDtype(),
+    str(Variables.OEGEST_R10): pd.CategoricalDtype(),
+    str(Variables.OEGEST_R3): pd.CategoricalDtype(),
+    str(Variables.DBWT): pd.CategoricalDtype(),
+    str(Variables.BWTR12): pd.CategoricalDtype(),
+    str(Variables.BWTR4): pd.CategoricalDtype(),
+    str(Variables.DWGT_R): pd.CategoricalDtype(),
+    str(Variables.F_DWGT): pd.CategoricalDtype(),
+    str(Variables.AB_AVEN1): pd.CategoricalDtype(),
+    str(Variables.AB_AVEN6): pd.CategoricalDtype(),
+    str(Variables.AB_NICU): pd.CategoricalDtype(),
+    str(Variables.AB_SURF): pd.CategoricalDtype(),
+    str(Variables.AB_ANTI): pd.CategoricalDtype(),
+    str(Variables.AB_SEIZ): pd.CategoricalDtype(),
+    str(Variables.NO_ABNORM): pd.CategoricalDtype(),
     str(Variables.CONGENIT): pd.CategoricalDtype(),
     str(Variables.CA_ANEN): pd.CategoricalDtype(),
     str(Variables.CA_MNSB): pd.CategoricalDtype(),
@@ -465,6 +594,7 @@ IMPORTED: dict[
     str(Variables.F_CA_DISOR): pd.CategoricalDtype(),
     str(Variables.F_CA_HYPO): pd.CategoricalDtype(),
     str(Variables.NO_CONGEN): pd.CategoricalDtype(),
+    str(Variables.BFED): pd.CategoricalDtype(),
     str(Variables.F_MPCB): pd.CategoricalDtype(),
     str(Variables.PRECARE5): pd.CategoricalDtype(),
     str(Variables.PREVIS): pd.CategoricalDtype(),
@@ -472,15 +602,27 @@ IMPORTED: dict[
     str(Variables.F_TPCV): pd.CategoricalDtype(),
     str(Variables.WIC): pd.CategoricalDtype(),
     str(Variables.F_WIC): pd.CategoricalDtype(),
+    str(Variables.M_HT_IN): pd.CategoricalDtype(),
     str(Variables.BMI): pd.Float32Dtype(),
     str(Variables.BMI_R): pd.CategoricalDtype(),
     str(Variables.PWGT_R): pd.CategoricalDtype(),
     str(Variables.F_PWGT): pd.CategoricalDtype(),
-    str(Variables.DBWT): pd.CategoricalDtype(),
-    str(Variables.BWTR12): pd.CategoricalDtype(),
-    str(Variables.BWTR4): pd.CategoricalDtype(),
-    str(Variables.DWGT_R): pd.CategoricalDtype(),
-    str(Variables.F_DWGT): pd.CategoricalDtype(),
+    str(Variables.WTGAIN): pd.CategoricalDtype(),
+    str(Variables.WTGAIN_REC): pd.CategoricalDtype(),
+    str(Variables.RF_PPTERM): pd.CategoricalDtype(),
+    str(Variables.RF_INFTRM): pd.CategoricalDtype(),
+    str(Variables.RF_FEDRG): pd.CategoricalDtype(),
+    str(Variables.RF_ARTEC): pd.CategoricalDtype(),
+    str(Variables.RF_CESARE): pd.CategoricalDtype(),
+    str(Variables.NO_RISKS): pd.CategoricalDtype(),
+    str(Variables.LD_INDL): pd.CategoricalDtype(),
+    str(Variables.LD_AUGM): pd.CategoricalDtype(),
+    str(Variables.ME_PRES): pd.CategoricalDtype(),
+    str(Variables.ME_ROUTE): pd.CategoricalDtype(),
+    str(Variables.ME_TRIAL): pd.CategoricalDtype(),
+    str(Variables.RDMETH_REC): pd.CategoricalDtype(),
+    str(Variables.DMETH_REC): pd.CategoricalDtype(),
+    str(Variables.ATTEND): pd.CategoricalDtype(),
 }
 
 COMPUTED_VARS = list(COMPUTED.keys())
