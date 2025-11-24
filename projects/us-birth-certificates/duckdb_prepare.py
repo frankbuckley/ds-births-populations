@@ -1,3 +1,4 @@
+import chance
 import duckdb
 import os
 import pathlib
@@ -262,6 +263,121 @@ def combine_all() -> None:
         add_column(vars.P_DS_LB_NT_ETHN, "DOUBLE", con)
         add_column(vars.P_DS_LB_WT_MAGE_REDUC, "DOUBLE", con)
 
+        print("Setting year...")
+
+        con.execute(
+            f"""
+            UPDATE us_births
+            SET {vars.YEAR} = COALESCE({vars.DOB_YY}, {vars.DATAYEAR});
+            """
+        )
+
+        # combine CA_DOWN and CA_DOWNS into CA_DOWN_C
+
+        print("Setting ca_down_c...")
+
+        con.execute(
+            f"""
+            UPDATE us_births
+            SET {vars.CA_DOWN_C} = COALESCE({vars.CA_DOWN}, {vars.CA_DOWNS});
+            """
+        )
+
+        print("Setting down_ind...")
+
+        con.execute(
+            f"""
+            UPDATE us_births
+            SET {vars.DOWN_IND} = CASE
+                WHEN UPPER({vars.CA_DOWN_C}) = 'C' OR UPPER({vars.CA_DOWN_C}) = 'P' THEN 1
+                WHEN UPPER({vars.CA_DOWN_C}) = 'N' THEN 0
+                WHEN {vars.DOWNS} = 1 THEN 1
+                WHEN {vars.DOWNS} = 2 THEN 0
+                WHEN {vars.UCA_DOWNS} = 1 THEN 1
+                WHEN {vars.UCA_DOWNS} = 2 THEN 0
+                ELSE NULL
+            END;
+            """
+        )
+
+        print("Setting mage_c...")
+
+        con.execute(
+            f"""
+            UPDATE us_births
+            SET {vars.MAGE_C} = COALESCE({vars.MAGER}, {vars.DMAGE}, ({vars.MAGER41} + 13));
+            """
+        )
+
+        print("Setting 'p_ds_lb_nt'")
+
+        con.execute(
+            """
+            UPDATE us_births
+            SET p_ds_lb_nt = 1 / (1 + exp(7.33 - 4.211 / (1 + exp(-0.2815 * (mage_c - 37.23)))));
+            """)
+
+        prevalence_df = pd.DataFrame(
+            {
+                str(vars.YEAR): list(range(1989, 2025)),
+                str(vars.P_DS_LB_WT): [
+                    0.001038,
+                    0.001055,
+                    0.001077,
+                    0.001083,
+                    0.001093,
+                    0.001102,
+                    0.001121,
+                    0.001099,
+                    0.001124,
+                    0.001136,
+                    0.001153,
+                    0.001149,
+                    0.001179,
+                    0.001216,
+                    0.001219,
+                    0.001218,
+                    0.001236,
+                    0.001244,
+                    0.001261,
+                    0.001257,
+                    0.001262,
+                    0.001244,
+                    0.00127,
+                    0.001265,
+                    0.001283,
+                    0.001302,
+                    0.001265051,
+                    0.001295784,
+                    0.0013375,
+                    0.001324215,
+                    0.001324215,
+                    0.001324215,
+                    0.001324215,
+                    0.001324215,
+                    0.001324215,
+                    0.001324215,
+                ],
+            }
+        )
+
+        print("Setting 'p_ds_lb_wt'")
+
+        con.execute(
+            """
+            CREATE TABLE prevalence_year AS
+            SELECT * FROM prevalence_df
+            """
+        )
+
+        con.execute(
+            """
+            UPDATE us_births AS b
+            SET p_ds_lb_wt = e.p_ds_lb_wt FROM prevalence_year AS e
+            WHERE b.year = e.year;
+            """
+        )
+
         print("Setting mrace_c...")
 
         con.execute(
@@ -398,11 +514,11 @@ def combine_all() -> None:
 
         weights_df = pd.read_csv("./us-births-ds-rec-weights.csv").convert_dtypes()
 
-        print("Creating table ds_rec_weights")
+        print("Creating table ds_case_weights")
 
         con.execute(
             """
-            CREATE TABLE ds_rec_weights AS
+            CREATE TABLE ds_case_weights AS
             SELECT * FROM weights_df
             """
         )
@@ -414,7 +530,7 @@ def combine_all() -> None:
             """
         )
 
-        print("Setting ds_rec_weight")
+        print("Setting ds_case_weight")
 
         con.execute(
             """
@@ -428,9 +544,22 @@ def combine_all() -> None:
                         WHEN b.down_ind = 1 AND b.mracehisp_c = 5 THEN w.his
                         WHEN b.down_ind = 1 THEN w.total
                         ELSE 0
-                        END
-            FROM ds_rec_weights AS w
+                    END
+            FROM ds_case_weights AS w
             WHERE b.year = w.year;
+            """
+        )
+
+        print("Reading us-births-estimated-prevalence-ethnicity-2000-2018.csv")
+
+        prev_ethnicity_df = pd.read_csv("./us-births-estimated-prevalence-ethnicity-2000-2018.csv").convert_dtypes()
+
+        print("Creating table us_births_est_prevalence_ethnicity")
+
+        con.execute(
+            """
+            CREATE TABLE us_births_est_prevalence_ethnicity AS
+            SELECT * FROM prev_ethnicity_df
             """
         )
 
