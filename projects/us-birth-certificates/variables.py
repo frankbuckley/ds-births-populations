@@ -321,12 +321,15 @@ class Variables(StrEnum):
     ATTEND = "attendant"
     """Attendant at Birth"""
 
+    # added/computed columns
+
     YEAR = "year"
 
     MAGE_C = "mage_c"
 
     MRACE_C = "mrace_c"
     MHISP_C = "mhisp_c"
+    MRACEHISP_C = "mracehisp_c"
 
     DOWN_IND = "down_ind"  # DS indicated (DOWNS | UCA_DOWNS | CA_DOWNS | CA_DOWN)
 
