@@ -294,14 +294,16 @@ class Variables(StrEnum):
     """Weight Gain Recode"""
     RF_PPTERM = "rf_ppterm"
     """Previous Preterm Birth"""
-    RF_INFTRM = "rf_inftrm"
+    RF_INFTR = "rf_inftr"
     """Infertility Treatment Used"""
     RF_FEDRG = "rf_fedrg"
     """Fertility Drug Use"""
     RF_ARTEC = "rf_artec"
     """Assisted Reproductive Technology"""
-    RF_CESARE = "rf_cesaree"
+    RF_CESAR = "rf_cesar"
     """Previous Cesarean"""
+    RF_CESARN = "rf_cesarn"
+    """Number of Previous Cesareans"""
     NO_RISKS = "no_risks"
     """No Risk Factors Reported"""
     LD_INDL = "ld_indl"
@@ -318,7 +320,7 @@ class Variables(StrEnum):
     """Delivery Method Recode"""
     DMETH_REC = "dmeth_rec"
     """Delivery Method Recode"""
-    ATTEND = "attendant"
+    ATTEND = "attend"
     """Attendant at Birth"""
 
     # added/computed columns
@@ -613,10 +615,11 @@ IMPORTED: dict[
     str(Variables.WTGAIN): pd.CategoricalDtype(),
     str(Variables.WTGAIN_REC): pd.CategoricalDtype(),
     str(Variables.RF_PPTERM): pd.CategoricalDtype(),
-    str(Variables.RF_INFTRM): pd.CategoricalDtype(),
+    str(Variables.RF_INFTR): pd.CategoricalDtype(),
     str(Variables.RF_FEDRG): pd.CategoricalDtype(),
     str(Variables.RF_ARTEC): pd.CategoricalDtype(),
-    str(Variables.RF_CESARE): pd.CategoricalDtype(),
+    str(Variables.RF_CESAR): pd.CategoricalDtype(),
+    str(Variables.RF_CESARN): pd.CategoricalDtype(),
     str(Variables.NO_RISKS): pd.CategoricalDtype(),
     str(Variables.LD_INDL): pd.CategoricalDtype(),
     str(Variables.LD_AUGM): pd.CategoricalDtype(),
