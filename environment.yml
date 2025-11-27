@@ -37,6 +37,7 @@ dependencies:
   - statsmodels
   - tabulate
   - xarray
+  - xgboost
   - xlrd
   - XlsxWriter
   - pip
