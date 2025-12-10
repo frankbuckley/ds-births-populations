@@ -6,15 +6,18 @@ dependencies:
   - python=3.13
   - arviz
   - blackjax
+  - dcor
   - duckdb
   - fastparquet
   - formulaic
   - graphviz
   - ipython
+  - ipywidgets
   - jax
   - jupyterlab
   - lightgbm
   - matplotlib
+  - mpmath
   - networkx
   - numpy
   - numpyro
@@ -23,6 +26,7 @@ dependencies:
   - pandas
   - pandas-stubs
   - pandoc
+  - pingouin
   - polars
   - pyarrow
   - pymc
