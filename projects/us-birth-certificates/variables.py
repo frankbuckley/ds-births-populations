@@ -13,9 +13,11 @@ class Variables(StrEnum):
     DOB_YY = "dob_yy"
     """Year of birth"""
     DOB_MM = "dob_mm"
-    """Month of birth"""
+    """Month of birth (01: January... 12: December)"""
     DOB_WK = "dob_wk"
-    """Birth day of week"""
+    """Birth day of week (1: Sunday... 7: Saturday)"""
+    DOB_TT = "dob_tt"
+    """Birth time of day (0000-2359: Time of Birth; 9999: Not Stated)"""
     OSTATE = "ostate"
     """Occurrence state"""
     XOSTATE = "xostate"
@@ -29,7 +31,7 @@ class Variables(StrEnum):
     F_BFACIL = "f_bfacil"
     """Reporting flag for birth place"""
     BFACIL3 = "bfacil3"
-    """Birth place recode"""
+    """Birth place recode (1: Hospital, 2: Not in Hospital, 3: Unknown/not stated)"""
     UMAGERPT = "umagerpt"
     """Mother's reported age"""
     MAGE_IMPFLG = "mage_impflg"
@@ -93,7 +95,7 @@ class Variables(StrEnum):
     DMAR = "dmar"
     """Marital Status"""
     F_MAR_P = "f_mar_p"
-    """Reporting Flag for Paternity Acknowled"""
+    """Reporting Flag for Paternity Acknowledged"""
     DMEDUC = "dmeduc"
     """Education of Mother"""
     MEDUC = "meduc"
@@ -292,6 +294,16 @@ class Variables(StrEnum):
     """Weight Gain"""
     WTGAIN_REC = "wtgain_rec"
     """Weight Gain Recode"""
+    RF_PDIAB = "rf_pdiab"
+    """Prepregnancy Diabetes"""
+    RF_GDIAB = "rf_gdiab"
+    """Gestational Diabetes"""
+    RF_PHYPE = "rf_phype"
+    """Prepregnancy Hypertension"""
+    RF_GHYPE = "rf_ghype"
+    """Gestational Hypertension"""
+    RF_EHYPE = "rf_ehype"
+    """Hypertension Eclampsia"""
     RF_PPTERM = "rf_ppterm"
     """Previous Preterm Birth"""
     RF_INFTR = "rf_inftr"
@@ -310,6 +322,8 @@ class Variables(StrEnum):
     """Induction of Labor"""
     LD_AUGM = "ld_augm"
     """Augmentation of Labor"""
+    LD_ANES = "ld_anes"
+    """Anesthesia"""
     ME_PRES = "me_pres"
     """Fetal Presentation at Delivery"""
     ME_ROUTE = "me_route"
@@ -345,43 +359,43 @@ class Variables(StrEnum):
 
     P_DS_LB_WT = "p_ds_lb_wt"
     """
-    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based
     prevalence for the given year with no additional adjustments (for maternal age or ethnicity).
     """
 
     P_DS_LB_NT = "p_ds_lb_nt"
     """
-    Probability of Down syndrome live birth absent terminations. Estimated from maternal age 
+    Probability of Down syndrome live birth absent terminations. Estimated from maternal age
     using Morris formula.
     """
 
     P_DS_LB_WT_MAGE = "p_ds_lb_wt_mage"
     """
-    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based
     prevalence for the given year and maternal age.
     """
 
     P_DS_LB_NT_MAGE = "p_ds_lb_nt_mage"
     """
-    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based
     prevalence for the given year and maternal age.
     """
 
     P_DS_LB_WT_ETHN = "p_ds_lb_wt_ethn"
     """
-    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based
     prevalence for the given year and ethnicity.
     """
 
     P_DS_LB_NT_ETHN = "p_ds_lb_nt_ethn"
     """
-    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth absent terminations. Estimated from surveillance-based
     prevalence for the given year and ethnicity.
     """
 
     P_DS_LB_WT_MAGE_REDUC = "p_ds_lb_wt_mage_reduc"
     """
-    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based 
+    Probability of Down syndrome live birth with terminations. Estimated from surveillance-based
     reduction rate for the given year applied to probability of DS live birth absent terminations,
     estimated from maternal age (P_DS_LB_NT * reduc_rate[year]).
     """
@@ -431,6 +445,7 @@ IMPORTED: dict[
     str(Variables.DOB_YY): pd.UInt16Dtype(),
     str(Variables.DOB_MM): pd.CategoricalDtype(),
     str(Variables.DOB_WK): pd.CategoricalDtype(),
+    str(Variables.DOB_TT): pd.CategoricalDtype(),
     str(Variables.OSTATE): pd.CategoricalDtype(),
     str(Variables.XOSTATE): pd.CategoricalDtype(),
     str(Variables.XOSTATE): pd.CategoricalDtype(),
@@ -614,6 +629,11 @@ IMPORTED: dict[
     str(Variables.F_PWGT): pd.CategoricalDtype(),
     str(Variables.WTGAIN): pd.CategoricalDtype(),
     str(Variables.WTGAIN_REC): pd.CategoricalDtype(),
+    str(Variables.RF_PDIAB): pd.CategoricalDtype(),
+    str(Variables.RF_GDIAB): pd.CategoricalDtype(),
+    str(Variables.RF_PHYPE): pd.CategoricalDtype(),
+    str(Variables.RF_GHYPE): pd.CategoricalDtype(),
+    str(Variables.RF_EHYPE): pd.CategoricalDtype(),
     str(Variables.RF_PPTERM): pd.CategoricalDtype(),
     str(Variables.RF_INFTR): pd.CategoricalDtype(),
     str(Variables.RF_FEDRG): pd.CategoricalDtype(),
@@ -623,6 +643,7 @@ IMPORTED: dict[
     str(Variables.NO_RISKS): pd.CategoricalDtype(),
     str(Variables.LD_INDL): pd.CategoricalDtype(),
     str(Variables.LD_AUGM): pd.CategoricalDtype(),
+    str(Variables.LD_ANES): pd.CategoricalDtype(),
     str(Variables.ME_PRES): pd.CategoricalDtype(),
     str(Variables.ME_ROUTE): pd.CategoricalDtype(),
     str(Variables.ME_TRIAL): pd.CategoricalDtype(),
