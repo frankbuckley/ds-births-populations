@@ -1,302 +1,371 @@
-import chance
 import pyarrow as pa
-import pandas as pd
-from data_utils import (
-    constrain_pa_series_to_uint8,
-    constrain_pa_series_to_uint16,
-    map_mrace,
-    map_mhisp,
-)
+import pyarrow.compute as pc
+import pyarrow.dataset as ds
+import pyarrow.parquet as pq
+
 from variables import Variables as vars
 
-print("Reading parquet file...")
 
-df = pd.read_parquet("./data/us_births_combined.parquet", dtype_backend="pyarrow")
+def _any_true(mask: pa.Array) -> bool:
+    # pc.any can be null if all null; treat as False
+    s = pc.any(mask)
+    return bool(s.as_py() or False)
 
-print("Setting data types and constraints...")
 
-df[vars.DATAYEAR] = constrain_pa_series_to_uint16(df[vars.DATAYEAR], min=1989)
-df[vars.BIRYR] = constrain_pa_series_to_uint16(df[vars.BIRYR], min=1989)
-df[vars.DOB_YY] = constrain_pa_series_to_uint16(df[vars.DOB_YY], min=1989)
-df[vars.DOB_MM] = constrain_pa_series_to_uint8(df[vars.DOB_MM], min=1, max=12)
-df[vars.DOB_WK] = constrain_pa_series_to_uint8(df[vars.DOB_WK], min=1, max=7)
-df[vars.OSTATE] = df[vars.OSTATE].astype(pd.ArrowDtype(pa.string()))
-df[vars.XOSTATE] = df[vars.XOSTATE].astype(pd.ArrowDtype(pa.string()))
-df[vars.OCNTYFIPS] = constrain_pa_series_to_uint16(df[vars.OCNTYFIPS])
-df[vars.OCNTYPOP] = constrain_pa_series_to_uint8(df[vars.OCNTYPOP])
-df[vars.BFACIL] = constrain_pa_series_to_uint8(df[vars.BFACIL], min=1, max=9)
-df[vars.F_BFACIL] = constrain_pa_series_to_uint8(df[vars.F_BFACIL], min=0, max=1)
-df[vars.UMAGERPT] = constrain_pa_series_to_uint8(df[vars.UMAGERPT])
-df[vars.MAGE_IMPFLG] = constrain_pa_series_to_uint8(df[vars.MAGE_IMPFLG], min=0, max=1)
-df[vars.MAGE_REPFLG] = constrain_pa_series_to_uint8(
-    pd.to_numeric(df[vars.MAGE_REPFLG], errors="coerce"), min=0, max=1
-)
-df[vars.MAGER] = constrain_pa_series_to_uint8(df[vars.MAGER], min=12, max=50)
-df[vars.DMAGE] = constrain_pa_series_to_uint8(df[vars.DMAGE])
-df[vars.DMAGERPT] = constrain_pa_series_to_uint8(df[vars.DMAGERPT])
-df[vars.MAGER41] = constrain_pa_series_to_uint8(df[vars.MAGER41])
-df[vars.MAGER14] = constrain_pa_series_to_uint8(df[vars.MAGER14], min=1, max=14)
-df[vars.MAGER9] = constrain_pa_series_to_uint8(df[vars.MAGER9], min=1, max=14)
-df[vars.MAGE36] = constrain_pa_series_to_uint8(df[vars.MAGE36], min=1, max=41)
-df[vars.MAGER12] = constrain_pa_series_to_uint8(df[vars.MAGER12], min=1, max=14)
-df[vars.MAGER8] = constrain_pa_series_to_uint8(df[vars.MAGER8], min=1, max=9)
-df[vars.UMBSTATE] = df[vars.UMBSTATE].astype(pd.ArrowDtype(pa.string()))
-df[vars.MBSTATE_REC] = constrain_pa_series_to_uint8(df[vars.MBSTATE_REC], min=1, max=3)
-df[vars.XMRSTATE] = df[vars.XMRSTATE].astype(pd.ArrowDtype(pa.string()))
-df[vars.MRSTATE] = df[vars.MRSTATE].astype(pd.ArrowDtype(pa.string()))
-df[vars.RCNTY_POP] = df[vars.RCNTY_POP].astype(pd.ArrowDtype(pa.string()))
-df[vars.RCITY_POP] = df[vars.RCITY_POP].astype(pd.ArrowDtype(pa.string()))
-df[vars.METRORES] = df[vars.METRORES].astype(pd.ArrowDtype(pa.string()))
-df[vars.RESTATUS] = constrain_pa_series_to_uint8(df[vars.RESTATUS], min=1, max=4)
-df[vars.MBRACE] = constrain_pa_series_to_uint8(df[vars.MBRACE], min=1, max=24)
-df[vars.MRACE] = constrain_pa_series_to_uint8(df[vars.MRACE])
-df[vars.MRACEREC] = constrain_pa_series_to_uint8(df[vars.MRACEREC])
-df[vars.MRACE31] = constrain_pa_series_to_uint8(df[vars.MRACE31], min=1, max=31)
-df[vars.MRACE6] = constrain_pa_series_to_uint8(df[vars.MRACE6], min=1, max=6)
-df[vars.MRACE15] = constrain_pa_series_to_uint8(df[vars.MRACE15], min=1, max=15)
-df[vars.MRACEIMP] = constrain_pa_series_to_uint8(df[vars.MRACEIMP], min=1, max=2)
-df[vars.ORMOTH] = constrain_pa_series_to_uint8(df[vars.ORMOTH])
-df[vars.ORRACEM] = constrain_pa_series_to_uint8(df[vars.ORRACEM])
-df[vars.UMHISP] = constrain_pa_series_to_uint8(df[vars.UMHISP])
-df[vars.MHISPX] = constrain_pa_series_to_uint8(df[vars.MHISPX], min=0, max=9)
-df[vars.MHISP_R] = constrain_pa_series_to_uint8(df[vars.MHISP_R], min=0, max=9)
-df[vars.F_MHISP] = constrain_pa_series_to_uint8(df[vars.F_MHISP], min=0, max=1)
-df[vars.MRACEHISP] = constrain_pa_series_to_uint8(df[vars.MRACEHISP], min=1, max=8)
-df[vars.MAR] = constrain_pa_series_to_uint8(df[vars.MAR])
-df[vars.MAR_IMP] = df[vars.MAR_IMP].astype(pd.ArrowDtype(pa.string()))
-df[vars.MAR_P] = df[vars.MAR_P].astype(pd.ArrowDtype(pa.string()))
-df[vars.DMAR] = df[vars.DMAR].astype(pd.ArrowDtype(pa.string()))
-df[vars.F_MAR_P] = constrain_pa_series_to_uint8(df[vars.F_MAR_P], min=0, max=1)
-df[vars.DMEDUC] = constrain_pa_series_to_uint8(df[vars.DMEDUC])
-df[vars.MEDUC] = constrain_pa_series_to_uint8(df[vars.MEDUC], min=1, max=9)
-df[vars.UMEDUC] = constrain_pa_series_to_uint8(df[vars.UMEDUC])
-df[vars.MEDUC6] = constrain_pa_series_to_uint8(df[vars.MEDUC6])
-df[vars.MEDUC_REC] = constrain_pa_series_to_uint8(df[vars.MEDUC_REC])
-df[vars.MPLBIR] = constrain_pa_series_to_uint8(df[vars.MPLBIR])
-df[vars.F_MEDUC] = constrain_pa_series_to_uint8(df[vars.F_MEDUC], min=0, max=1)
-df[vars.DFAGE] = constrain_pa_series_to_uint8(df[vars.DFAGE])
-df[vars.DFAGERPT] = constrain_pa_series_to_uint8(df[vars.DFAGERPT])
-df[vars.FAGE11] = constrain_pa_series_to_uint8(df[vars.FAGE11])
-df[vars.FAGERPT] = constrain_pa_series_to_uint8(df[vars.FAGERPT])
-df[vars.UFAGECOMB] = constrain_pa_series_to_uint8(df[vars.UFAGECOMB])
-df[vars.FAGERPT_FLG] = df[vars.FAGERPT_FLG].astype(pd.ArrowDtype(pa.string()))
-df[vars.FAGECOMB] = constrain_pa_series_to_uint8(df[vars.FAGECOMB], min=0, max=99)
-df[vars.FAGEREC11] = constrain_pa_series_to_uint8(df[vars.FAGEREC11], min=0, max=11)
-df[vars.FBRACE] = constrain_pa_series_to_uint8(df[vars.FBRACE])
-df[vars.ORFATH] = constrain_pa_series_to_uint8(df[vars.ORFATH])
-df[vars.ORRACEF] = constrain_pa_series_to_uint8(df[vars.ORRACEF])
-df[vars.FRACE] = constrain_pa_series_to_uint8(df[vars.FRACE])
-df[vars.FRACEIMP] = constrain_pa_series_to_uint8(df[vars.FRACEIMP])
-df[vars.FRACEREC] = constrain_pa_series_to_uint8(df[vars.FRACEREC])
-df[vars.UFHISP] = constrain_pa_series_to_uint8(df[vars.UFHISP])
-df[vars.FRACEHISP] = constrain_pa_series_to_uint8(df[vars.FRACEHISP], min=1, max=9)
-df[vars.FRACE31] = constrain_pa_series_to_uint8(df[vars.FRACE31], min=1, max=99)
-df[vars.FRACE6] = constrain_pa_series_to_uint8(df[vars.FRACE6], min=1, max=9)
-df[vars.FRACE15] = constrain_pa_series_to_uint8(df[vars.FRACE15], min=1, max=99)
-df[vars.FHISPX] = constrain_pa_series_to_uint8(df[vars.FHISPX], min=0, max=9)
-df[vars.FHISP_R] = constrain_pa_series_to_uint8(df[vars.FHISP_R], min=0, max=9)
-df[vars.F_FHISP] = constrain_pa_series_to_uint8(df[vars.F_FHISP], min=0, max=1)
-df[vars.FEDUC] = constrain_pa_series_to_uint8(df[vars.FEDUC], min=1, max=9)
-df[vars.PRIORLIVE] = constrain_pa_series_to_uint8(df[vars.PRIORLIVE], min=0, max=99)
-df[vars.PRIORDEAD] = constrain_pa_series_to_uint8(df[vars.PRIORDEAD], min=0, max=99)
-df[vars.PRIORTERM] = constrain_pa_series_to_uint8(df[vars.PRIORTERM], min=0, max=99)
-df[vars.LBO] = constrain_pa_series_to_uint8(df[vars.LBO])
-df[vars.LBO_REC] = constrain_pa_series_to_uint8(df[vars.LBO_REC], min=1, max=9)
-df[vars.TBO] = constrain_pa_series_to_uint8(df[vars.TBO])
-df[vars.TBO_REC] = constrain_pa_series_to_uint8(df[vars.TBO_REC], min=1, max=9)
-df[vars.ILLB_R] = constrain_pa_series_to_uint16(df[vars.ILLB_R], min=0, max=999)
-df[vars.ILLB_R11] = constrain_pa_series_to_uint8(df[vars.ILLB_R11], min=0, max=99)
-df[vars.ILLB_R] = constrain_pa_series_to_uint16(df[vars.ILOP_R], min=0, max=999)
-df[vars.DLLB_MM] = constrain_pa_series_to_uint8(df[vars.ILOP_R11], min=0, max=99)
-df[vars.DLLB_MM] = constrain_pa_series_to_uint8(df[vars.ILP_R], min=0, max=99)
-df[vars.DLLB_MM] = constrain_pa_series_to_uint8(df[vars.DLLB_MM])
-df[vars.DLLB_YY] = constrain_pa_series_to_uint8(df[vars.DLLB_YY])
-df[vars.PRECARE] = constrain_pa_series_to_uint8(df[vars.PRECARE], min=0, max=10)
-df[vars.AMNIO] = constrain_pa_series_to_uint8(df[vars.AMNIO])
-df[vars.PAY] = constrain_pa_series_to_uint8(df[vars.PAY], min=1, max=9)
-df[vars.PAY_REC] = constrain_pa_series_to_uint8(df[vars.PAY_REC], min=1, max=9)
-df[vars.F_PAY] = constrain_pa_series_to_uint8(df[vars.F_PAY], min=0, max=1)
-df[vars.F_PAY_REC] = constrain_pa_series_to_uint8(df[vars.F_PAY_REC], min=0, max=1)
-df[vars.APGAR5] = constrain_pa_series_to_uint8(df[vars.APGAR5], min=0, max=99)
-df[vars.APGAR5R] = constrain_pa_series_to_uint8(df[vars.APGAR5R], min=1, max=5)
-df[vars.F_APGAR5] = constrain_pa_series_to_uint8(df[vars.F_APGAR5], min=0, max=1)
-df[vars.APGAR10] = constrain_pa_series_to_uint8(df[vars.APGAR10], min=0, max=99)
-df[vars.APGAR10R] = constrain_pa_series_to_uint8(df[vars.APGAR10R], min=1, max=5)
-df[vars.DPLURAL] = constrain_pa_series_to_uint8(df[vars.DPLURAL], min=1, max=4)
-df[vars.IMP_PLURAL] = constrain_pa_series_to_uint8(df[vars.IMP_PLURAL], min=1, max=1)
-df[vars.SETORDER_R] = constrain_pa_series_to_uint8(df[vars.SETORDER_R], min=1, max=9)
-df[vars.SEX] = df[vars.SEX].astype(pd.ArrowDtype(pa.string()))
-df[vars.COMBGEST] = constrain_pa_series_to_uint8(df[vars.COMBGEST], min=17, max=99)
-df[vars.GESTREC10] = constrain_pa_series_to_uint8(df[vars.GESTREC10], min=1, max=99)
-df[vars.GESTREC3] = constrain_pa_series_to_uint8(df[vars.GESTREC3], min=1, max=3)
-df[vars.LMPUSED] = constrain_pa_series_to_uint8(df[vars.LMPUSED], min=1, max=1)
-df[vars.OEGEST_COMB] = constrain_pa_series_to_uint8(df[vars.OEGEST_COMB], min=17, max=99)
-df[vars.OEGEST_R10] = constrain_pa_series_to_uint8(df[vars.OEGEST_R10], min=1, max=99)
-df[vars.OEGEST_R3] = constrain_pa_series_to_uint8(df[vars.OEGEST_R3], min=1, max=3)
-df[vars.DBWT] = constrain_pa_series_to_uint16(df[vars.DBWT], min=0, max=999)
-df[vars.BWTR12] = constrain_pa_series_to_uint8(df[vars.BWTR12], min=1, max=12)
-df[vars.BWTR4] = constrain_pa_series_to_uint8(df[vars.BWTR4], min=1, max=4)
-df[vars.DWGT_R] = constrain_pa_series_to_uint16(df[vars.DWGT_R], min=100, max=999)
-df[vars.F_DWGT] = constrain_pa_series_to_uint8(df[vars.F_DWGT], min=0, max=1)
-df[vars.AB_AVEN1] = df[vars.AB_AVEN1].astype(pd.ArrowDtype(pa.string()))
-df[vars.AB_AVEN6] = df[vars.AB_AVEN6].astype(pd.ArrowDtype(pa.string()))
-df[vars.AB_NICU] = df[vars.AB_NICU].astype(pd.ArrowDtype(pa.string()))
-df[vars.AB_SURF] = df[vars.AB_SURF].astype(pd.ArrowDtype(pa.string()))
-df[vars.AB_ANTI] = df[vars.AB_ANTI].astype(pd.ArrowDtype(pa.string()))
-df[vars.AB_SEIZ] = df[vars.AB_SEIZ].astype(pd.ArrowDtype(pa.string()))
-df[vars.NO_ABNORM] = constrain_pa_series_to_uint8(df[vars.NO_ABNORM], min=0, max=9)
-df[vars.CONGENIT] = df[vars.CONGENIT].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_ANEN] = df[vars.CA_ANEN].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_MNSB] = df[vars.CA_MNSB].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_CCHD] = df[vars.CA_CCHD].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_CDH] = df[vars.CA_CDH].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_OMPH] = df[vars.CA_OMPH].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_GAST] = df[vars.CA_GAST].astype(pd.ArrowDtype(pa.string()))
-df[vars.F_CA_ANEN] = constrain_pa_series_to_uint8(df[vars.F_CA_ANEN], min=0, max=1)
-df[vars.F_CA_MENIN] = constrain_pa_series_to_uint8(df[vars.F_CA_MENIN], min=0, max=1)
-df[vars.F_CA_HEART] = constrain_pa_series_to_uint8(df[vars.F_CA_HEART], min=0, max=1)
-df[vars.F_CA_HERNIA] = constrain_pa_series_to_uint8(df[vars.F_CA_HERNIA], min=0, max=1)
-df[vars.F_CA_OMPHA] = constrain_pa_series_to_uint8(df[vars.F_CA_OMPHA], min=0, max=1)
-df[vars.F_CA_GASTRO] = constrain_pa_series_to_uint8(df[vars.F_CA_GASTRO], min=0, max=1)
-df[vars.CA_LIMB] = df[vars.CA_LIMB].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_CLEFT] = df[vars.CA_CLEFT].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_CLPAL] = df[vars.CA_CLPAL].astype(pd.ArrowDtype(pa.string()))
-df[vars.DOWNS] = constrain_pa_series_to_uint8(df[vars.DOWNS], min=0, max=255)
-df[vars.UCA_DOWNS] = constrain_pa_series_to_uint8(df[vars.UCA_DOWNS], min=1, max=9)
-df[vars.CA_DOWN] = df[vars.CA_DOWN].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_DOWNS] = df[vars.CA_DOWNS].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_DISOR] = df[vars.CA_DISOR].astype(pd.ArrowDtype(pa.string()))
-df[vars.CA_HYPO] = df[vars.CA_HYPO].astype(pd.ArrowDtype(pa.string()))
-df[vars.F_CA_LIMB] = constrain_pa_series_to_uint8(df[vars.F_CA_LIMB], min=0, max=1)
-df[vars.F_CA_CLEFT] = constrain_pa_series_to_uint8(df[vars.F_CA_CLEFT], min=0, max=1)
-df[vars.F_CA_CLPAL] = constrain_pa_series_to_uint8(df[vars.F_CA_CLPAL], min=0, max=1)
-df[vars.F_CA_DOWN] = constrain_pa_series_to_uint8(df[vars.F_CA_DOWN], min=0, max=1)
-df[vars.F_CA_DOWNS] = constrain_pa_series_to_uint8(df[vars.F_CA_DOWNS], min=0, max=1)
-df[vars.F_CA_DISOR] = constrain_pa_series_to_uint8(df[vars.F_CA_DISOR], min=0, max=1)
-df[vars.F_CA_HYPO] = constrain_pa_series_to_uint8(df[vars.F_CA_HYPO], min=0, max=1)
-df[vars.NO_CONGEN] = constrain_pa_series_to_uint8(df[vars.NO_CONGEN], min=0, max=1)
-df[vars.BFED] = df[vars.BFED].astype(pd.ArrowDtype(pa.string()))
-df[vars.F_MPCB] = constrain_pa_series_to_uint8(df[vars.F_MPCB], min=0, max=1)
-df[vars.PRECARE5] = constrain_pa_series_to_uint8(df[vars.PRECARE5], min=1, max=5)
-df[vars.PREVIS] = constrain_pa_series_to_uint8(df[vars.PREVIS], min=0, max=99)
-df[vars.PREVIS_REC] = constrain_pa_series_to_uint8(df[vars.PREVIS_REC], min=1, max=12)
-df[vars.F_TPCV] = constrain_pa_series_to_uint8(df[vars.F_TPCV], min=0, max=1)
-df[vars.WIC] = df[vars.WIC].astype(pd.ArrowDtype(pa.string()))
-df[vars.F_WIC] = constrain_pa_series_to_uint8(df[vars.F_WIC], min=0, max=1)
-df[vars.M_HT_IN] = constrain_pa_series_to_uint8(df[vars.M_HT_IN], min=30, max=99)
-df[vars.BMI] = df[vars.BMI].astype(pd.ArrowDtype(pa.float16()))
-df[vars.BMI_R] = constrain_pa_series_to_uint8(df[vars.BMI_R], min=1, max=9)
-df[vars.PWGT_R] = constrain_pa_series_to_uint16(df[vars.PWGT_R], min=75, max=999)
-df[vars.F_PWGT] = constrain_pa_series_to_uint8(df[vars.F_PWGT], min=0, max=1)
-df[vars.WTGAIN] = constrain_pa_series_to_uint8(df[vars.WTGAIN], min=0, max=99)
-df[vars.WTGAIN_REC] = constrain_pa_series_to_uint8(df[vars.WTGAIN_REC], min=1, max=9)
-df[vars.RF_PPTERM] = df[vars.RF_PPTERM].astype(pd.ArrowDtype(pa.string()))
-df[vars.RF_INFTR] = df[vars.RF_INFTR].astype(pd.ArrowDtype(pa.string()))
-df[vars.RF_FEDRG] = df[vars.RF_FEDRG].astype(pd.ArrowDtype(pa.string()))
-df[vars.RF_ARTEC] = df[vars.RF_ARTEC].astype(pd.ArrowDtype(pa.string()))
-df[vars.RF_CESAR] = df[vars.RF_CESAR].astype(pd.ArrowDtype(pa.string()))
-df[vars.NO_RISKS] = constrain_pa_series_to_uint8(df[vars.NO_RISKS], min=1, max=9)
-df[vars.LD_INDL] = df[vars.LD_INDL].astype(pd.ArrowDtype(pa.string()))
-df[vars.LD_AUGM] = df[vars.LD_AUGM].astype(pd.ArrowDtype(pa.string()))
-df[vars.ME_PRES] = constrain_pa_series_to_uint8(df[vars.ME_PRES], min=1, max=9)
-df[vars.ME_ROUTE] = constrain_pa_series_to_uint8(df[vars.ME_ROUTE], min=1, max=9)
-df[vars.ME_TRIAL] = df[vars.ME_TRIAL].astype(pd.ArrowDtype(pa.string()))
-df[vars.RDMETH_REC] = constrain_pa_series_to_uint8(df[vars.RDMETH_REC], min=1, max=9)
-df[vars.DMETH_REC] = constrain_pa_series_to_uint8(df[vars.DMETH_REC], min=1, max=9)
-df[vars.ATTEND] = constrain_pa_series_to_uint8(df[vars.ATTEND], min=1, max=9)
+_NUMERIC_RE = r"^[+-]?\d+(\.\d+)?([eE][+-]?\d+)?$"
 
-# print("Setting 'year'")
 
-# # combine DATAYEAR and DOB_YY into CA_DOWN_C
-# df[vars.YEAR] = df[vars.DOB_YY].combine_first(df[vars.DATAYEAR])
+def _count_true(mask: pa.Array) -> int:
+    # mask is boolean with possible nulls
+    s = pc.sum(pc.cast(pc.fill_null(mask, False), pa.int64()))
+    return int(s.as_py() or 0)
 
-# print("Setting 'ca_down_c'")
 
-# # combine CA_DOWN and CA_DOWNS into CA_DOWN_C
-# df[vars.CA_DOWN_C] = df[vars.CA_DOWN].combine_first(df[vars.CA_DOWNS])
+def constrain_and_cast_uint_robust(
+    arr: pa.Array,
+    dtype: pa.DataType,
+    *,
+    min=None,
+    max=None,
+    non_integer="null",  # "null" or "truncate"
+    range_invalid="null",  # "null" or "error"
+    stats: dict | None = None,
+    stat_key: str | None = None,
+) -> pa.Array:
+    """
+    Robustly cast to an unsigned int dtype.
+    - Strings like '1.0' are accepted -> 1
+    - Unparseable strings -> null
+    - Non-integers (e.g. '1.2') -> null by default
+    - Out-of-range -> null by default
+    """
 
-# print("Setting 'down_ind'")
+    n = len(arr)
+    nulls_out = pa.nulls(n, type=dtype)
 
-# # DOWN_IND
-# # 0: No Down syndrome (DOWNS = 2, CA_DOWNS = 'N', CA_DOWN = 'N')'
-# # 1: Down syndrome (DOWNS = 1, CA_DOWNS = C or P, CA_DOWN = C or P)
-# df = df.assign(
-#     down_ind=(
-#         (df[vars.DOWNS].eq(1))
-#         | (df[vars.UCA_DOWNS].eq(1))
-#         | (df[vars.CA_DOWN_C].isin(["C", "P"]))
-#     ).astype(
-#         "UInt8"
-#     )  # convert True/False → 1.0/0.0
-# )
+    # 1) Coerce to float64 in a way that never raises on junk strings
+    if pa.types.is_string(arr.type) or pa.types.is_large_string(arr.type):
+        s = pc.utf8_trim_whitespace(arr)
+        # Treat empty string as null
+        s = pc.if_else(pc.equal(s, ""), pa.nulls(n, type=s.type), s)
 
-# df.loc[
-#     (df[vars.DOWNS].eq(2)) | (df[vars.DOWNS].eq(2)) | (df[vars.CA_DOWN_C].eq("N")),
-#     "down_ind",
-# ] = 0
+        numeric_mask = pc.match_substring_regex(s, _NUMERIC_RE)
+        s_num = pc.if_else(numeric_mask, s, pa.nulls(n, type=s.type))
 
-# print("Setting 'mage_c'")
+        if stats is not None and stat_key is not None:
+            stats.setdefault(stat_key, {})
+            stats[stat_key]["parse_invalid"] = stats[stat_key].get("parse_invalid", 0) + _count_true(
+                pc.invert(pc.fill_null(numeric_mask, False)))
 
-# # note: we only have MAGER from 2004. Before then there is DMAGE:
-# # "This item is: a) computed using dates of birth of mother and of delivery;
-# # b) reported; or c) imputed. This is the age item used in NCHS publications"
-# # In 2003: MAGER41: 01 = <15, 02 = 15, 41 = 54
-# df[vars.MAGE_C] = df[vars.MAGER].combine_first(
-#     df[vars.DMAGE].combine_first(df[vars.MAGER41] + 13)
-# )
+        f = pc.cast(s_num, pa.float64(), safe=False)
 
-# print("Setting 'p_ds_lb_nt'")
+    else:
+        # Non-string: try cast to float64 (this is safe for ints/floats/bools/nulls)
+        f = pc.cast(arr, pa.float64(), safe=False)
 
-# df[vars.P_DS_LB_NT] = chance.get_ds_lb_nt_probability_array(df[vars.MAGE_C])
+    # 2) Handle non-integer values
+    if non_integer == "null":
+        is_int = pc.equal(f, pc.floor(f))
+        if stats is not None and stat_key is not None:
+            stats.setdefault(stat_key, {})
+            stats[stat_key]["non_integer"] = stats[stat_key].get("non_integer", 0) + _count_true(
+                pc.and_(pc.is_valid(f), pc.invert(pc.fill_null(is_int, False))))
+        f = pc.if_else(is_int, f, pa.nulls(n, type=pa.float64()))
+    elif non_integer == "truncate":
+        pass
+    else:
+        raise ValueError("non_integer must be 'null' or 'truncate'")
 
-# prevalence_df = pd.DataFrame(
-#     {
-#         str(vars.YEAR): list(range(1989, 2025)),
-#         str(vars.P_DS_LB_WT): [
-#             0.001038,
-#             0.001055,
-#             0.001077,
-#             0.001083,
-#             0.001093,
-#             0.001102,
-#             0.001121,
-#             0.001099,
-#             0.001124,
-#             0.001136,
-#             0.001153,
-#             0.001149,
-#             0.001179,
-#             0.001216,
-#             0.001219,
-#             0.001218,
-#             0.001236,
-#             0.001244,
-#             0.001261,
-#             0.001257,
-#             0.001262,
-#             0.001244,
-#             0.00127,
-#             0.001265,
-#             0.001283,
-#             0.001302,
-#             0.001265051,
-#             0.001295784,
-#             0.0013375,
-#             0.001324215,
-#             0.001324215,
-#             0.001324215,
-#             0.001324215,
-#             0.001324215,
-#             0.001324215,
-#             0.001324215,
-#         ],
-#     }
-# )
+    # 3) Cast float -> uint, allowing float->int truncation (safe because we handled non-integers above)
+    out = pc.cast(f, dtype, safe=False)
 
-# print("Setting 'p_ds_lb_wt'")
+    # 4) Range constraints
+    if min is not None:
+        bad = pc.less(out, pa.scalar(min, type=dtype))
+        if range_invalid == "null":
+            if stats is not None and stat_key is not None:
+                stats.setdefault(stat_key, {})
+                stats[stat_key]["range_invalid"] = stats[stat_key].get("range_invalid", 0) + _count_true(bad)
+            out = pc.if_else(bad, nulls_out, out)
+        else:
+            if _count_true(bad) > 0:
+                raise ValueError(f"{stat_key or 'column'}: values below min={min}")
 
-# df = df.merge(prevalence_df, on=vars.YEAR, how="left")
+    if max is not None:
+        bad = pc.greater(out, pa.scalar(max, type=dtype))
+        if range_invalid == "null":
+            if stats is not None and stat_key is not None:
+                stats.setdefault(stat_key, {})
+                stats[stat_key]["range_invalid"] = stats[stat_key].get("range_invalid", 0) + _count_true(bad)
+            out = pc.if_else(bad, nulls_out, out)
+        else:
+            if _count_true(bad) > 0:
+                raise ValueError(f"{stat_key or 'column'}: values above max={max}")
 
-print("Writing file...")
+    return out
 
-df.to_parquet("./data/us_births.parquet", compression="zstd")
+
+def cast_to(arr: pa.Array, dtype: pa.DataType) -> pa.Array:
+    return pc.cast(arr, dtype, safe=False)
+
+
+INVALID_POLICY = "null"
+
+U8 = pa.uint8()
+U16 = pa.uint16()
+
+uint16_specs = {
+    vars.DATAYEAR: (1989, None),
+    vars.BIRYR: (1989, None),
+    vars.DOB_YY: (1989, None),
+    vars.DOB_TT: (0, 9999),
+
+    vars.DBWT: (0, 999),
+    vars.DWGT_R: (100, 999),
+    vars.PWGT_R: (75, 999),
+}
+
+uint8_specs = {
+    vars.DOB_MM: (1, 12),
+    vars.DOB_WK: (1, 7),
+
+    vars.BFACIL3: (1, 3),
+
+    vars.MAGER: (12, 50),
+    vars.DMAGE: (None, None),
+    vars.DMAGERPT: (None, None),
+    vars.MAGER14: (1, 14),
+    vars.MAGER9: (1, 14),
+    vars.MAGE36: (1, 41),
+    vars.MAGER12: (1, 14),
+    vars.MAGER8: (1, 9),
+
+    vars.MBSTATE_REC: (1, 3),
+    vars.RESTATUS: (1, 4),
+
+    vars.MBRACE: (1, 24),
+    vars.MRACE: (None, None),
+    vars.MRACEREC: (None, None),
+    vars.MRACE31: (1, 31),
+    vars.MRACE6: (1, 6),
+    vars.MRACE15: (1, 15),
+    vars.MRACEIMP: (1, 2),
+
+    vars.ORMOTH: (None, None),
+    vars.ORRACEM: (None, None),
+
+    vars.UMHISP: (None, None),
+    vars.MHISPX: (0, 9),
+    vars.MHISP_R: (0, 9),
+    vars.MRACEHISP: (1, 8),
+
+    vars.MAR: (None, None),
+
+    vars.DMEDUC: (None, None),
+    vars.MEDUC: (1, 9),
+    vars.UMEDUC: (None, None),
+    vars.MEDUC6: (None, None),
+    vars.MEDUC_REC: (None, None),
+    vars.MPLBIR: (None, None),
+
+    vars.DFAGERPT: (None, None),
+    vars.FAGE11: (None, None),
+    vars.FAGERPT: (None, None),
+    vars.UFAGECOMB: (None, None),
+    vars.FAGECOMB: (0, 99),
+    vars.FAGEREC11: (0, 11),
+
+    vars.ORFATH: (None, None),
+    vars.ORRACEF: (None, None),
+
+    vars.FRACE: (None, None),
+    vars.FRACEIMP: (None, None),
+    vars.FRACEREC: (None, None),
+
+    vars.UFHISP: (None, None),
+    vars.FRACEHISP: (1, 9),
+    vars.FRACE31: (1, 99),
+    vars.FRACE6: (1, 9),
+    vars.FRACE15: (1, 99),
+
+    vars.FHISPX: (0, 9),
+    vars.FHISP_R: (0, 9),
+
+    vars.FEDUC: (1, 9),
+
+    vars.PRIORLIVE: (0, 99),
+    vars.PRIORDEAD: (0, 99),
+    vars.PRIORTERM: (0, 99),
+
+    vars.LBO_REC: (1, 9),
+    vars.TBO_REC: (1, 9),
+
+    vars.ILLB_R11: (0, 99),
+    vars.ILOP_R11: (0, 99),
+    vars.ILP_R11: (0, 99),
+
+    vars.PRECARE: (0, 10),
+
+    vars.PAY: (1, 9),
+    vars.PAY_REC: (1, 9),
+
+    vars.APGAR5: (0, 99),
+    vars.APGAR5R: (1, 5),
+    vars.APGAR10: (0, 99),
+    vars.APGAR10R: (1, 5),
+
+    vars.DPLURAL: (1, 4),
+    vars.IMP_PLURAL: (1, 1),
+    vars.SETORDER_R: (1, 9),
+
+    vars.GESTREC10: (1, 99),
+
+    vars.NO_ABNORM: (0, 9),
+
+    vars.DOWNS: (0, 255),
+    vars.UCA_DOWNS: (1, 9),
+    vars.NO_CONGEN: (0, 1),
+
+    vars.PREVIS: (0, 99),
+    vars.PREVIS_REC: (1, 12),
+
+    vars.M_HT_IN: (30, 99),
+
+    vars.BMI_R: (1, 9),
+    vars.WTGAIN: (0, 99),
+
+    vars.ME_PRES: (1, 9),
+    vars.RDMETH_REC: (1, 9),
+    vars.DMETH_REC: (1, 9),
+    vars.NO_RISKS: (1, 9),
+    vars.ATTEND: (1, 9),
+}
+
+string_cols = [
+    vars.MAR_P,
+    vars.DMAR,
+    vars.SEX,
+    vars.AB_AVEN1,
+    vars.AB_AVEN6,
+    vars.AB_NICU,
+    vars.AB_SURF,
+    vars.AB_ANTI,
+    vars.AB_SEIZ,
+    vars.CA_ANEN,
+    vars.CA_MNSB,
+    vars.CA_CCHD,
+    vars.CA_CDH,
+    vars.CA_OMPH,
+    vars.CA_GAST,
+    vars.CA_LIMB,
+    vars.CA_CLEFT,
+    vars.CA_CLPAL,
+    vars.CA_DOWN,
+    vars.CA_DOWNS,
+    vars.CA_DISOR,
+    vars.CA_HYPO,
+    vars.BFED,
+    vars.WIC,
+    vars.RF_PDIAB,
+    vars.RF_GDIAB,
+    vars.RF_PHYPE,
+    vars.RF_GHYPE,
+    vars.RF_EHYPE,
+    vars.RF_PPTERM,
+    vars.RF_INFTR,
+    vars.RF_FEDRG,
+    vars.RF_ARTEC,
+    vars.RF_CESAR,
+    vars.RF_CESARN,
+    vars.LD_INDL,
+    vars.LD_AUGM,
+    vars.LD_ANES,
+]
+
+float16_cols = [
+    vars.BMI,
+]
+
+stats = {}
+
+
+def process_batch(batch: pa.RecordBatch) -> pa.RecordBatch:
+    arrays = []
+    fields = []
+
+    for name, arr in zip(batch.schema.names, batch.columns):
+        if name in uint8_specs:
+            print(f"Processing uint8 column: {name}")
+            mn, mx = uint8_specs[name]
+            arr = constrain_and_cast_uint_robust(
+                arr,
+                U8,
+                min=mn,
+                max=mx,
+                non_integer="null",
+                range_invalid="null",
+                stats=stats,
+                stat_key=name, )
+            arrays.append(arr)
+            fields.append(pa.field(name, U8))
+        elif name in uint16_specs:
+            print(f"Processing uint16 column: {name}")
+            mn, mx = uint16_specs[name]
+            arr = constrain_and_cast_uint_robust(
+                arr,
+                U16,
+                min=mn,
+                max=mx,
+                non_integer="null",
+                range_invalid="null",
+                stats=stats,
+                stat_key=name, )
+            arrays.append(arr)
+            fields.append(pa.field(name, U16))
+        elif name in string_cols:
+            print(f"Processing string column: {name}")
+            arr = cast_to(arr, pa.string())
+            arrays.append(arr)
+            fields.append(pa.field(name, pa.string()))
+        elif name in float16_cols:
+            print(f"Processing float16 column: {name}")
+            arr = cast_to(arr, pa.float16())
+            arrays.append(arr)
+            fields.append(pa.field(name, pa.float16()))
+        else:
+            print(f"Warning: Unspecified column '{name}', passing through as-is.")
+            arrays.append(arr)
+            fields.append(batch.schema.field(name))
+
+    return pa.RecordBatch.from_arrays(arrays, schema=pa.schema(fields))
+
+
+in_path = "./data/us_births_combined.parquet"
+out_path = "./data/us_births.parquet"
+
+dataset = ds.dataset(in_path, format="parquet")
+
+# adjust batch_size as needed based on available memory
+scanner = dataset.scanner(batch_size=2_097_152, use_threads=True)
+
+writer = None
+try:
+    for batch in scanner.to_batches():
+        out_batch = process_batch(batch)
+        table = pa.Table.from_batches([out_batch])
+
+        if writer is None:
+            writer = pq.ParquetWriter(
+                out_path,
+                table.schema,
+                compression="zstd",
+                use_dictionary=True,
+                write_statistics=True,
+            )
+
+        writer.write_table(table, row_group_size=500_000)
+finally:
+    if writer is not None:
+        writer.close()
+
+print("Done.")
