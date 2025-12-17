@@ -7,7 +7,7 @@ import duckdb
 
 def combine_all() -> None:
     src_dir = pathlib.Path("data")
-    source_parquet = src_dir / "us_births_combined.parquet"
+    source_parquet = src_dir / "us_births.parquet"
     out_db_temp = src_dir / "us_births_temp.db"
     out_db_temp.unlink(missing_ok=True)
 
