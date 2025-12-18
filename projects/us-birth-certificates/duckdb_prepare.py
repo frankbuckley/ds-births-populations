@@ -77,7 +77,6 @@ def combine_all() -> None:
         alter_column_type(vars.MAGER9, "UTINYINT", con)
         alter_column_type(vars.MAGE36, "UTINYINT", con)
         alter_column_type(vars.MAGER12, "UTINYINT", con)
-        alter_column_type(vars.MAGER8, "UTINYINT", con)
         alter_column_type(vars.MBSTATE_REC, "UTINYINT", con)
         alter_column_type(vars.RESTATUS, "UTINYINT", con)
         alter_column_type(vars.MBRACE, "UTINYINT", con)
