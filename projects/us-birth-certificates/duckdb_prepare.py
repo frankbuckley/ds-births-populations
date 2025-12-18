@@ -46,7 +46,7 @@ def add_column(col: str, col_type: str, con: duckdb.DuckDBPyConnection) -> None:
     con.execute(
         f"""
         ALTER TABLE us_births
-            ADD COLUMN {col} {col_type};
+            ADD COLUMN IF NOT EXISTS {col} {col_type};
         """
     )
 
@@ -254,7 +254,7 @@ def combine_all() -> None:
         con.execute(
             f"""
             UPDATE us_births
-            SET {vars.MAGE_C} = COALESCE({vars.MAGER}, {vars.DMAGE}, ({vars.MAGER41} + 13));
+            SET {vars.MAGE_C} = COALESCE({vars.MAGER}, {vars.DMAGE}, ({vars.MAGE36} + 13));
             """
         )
 
