@@ -23,6 +23,7 @@ dependencies:
   - numpyro
   - nutpie
   - optuna
+  - optuna-integration
   - orjson
   - pandas
   - pandas-stubs
@@ -46,3 +47,5 @@ dependencies:
   - xlrd
   - XlsxWriter
   - pip
+  - pip:
+      - optuna-integration[lightgbm]
