@@ -360,7 +360,6 @@ IMPORTED: dict[
     str(Variables.MAGER9): pd.CategoricalDtype(),
     str(Variables.MAGE36): pd.CategoricalDtype(),
     str(Variables.MAGER12): pd.CategoricalDtype(),
-    str(Variables.MAGER8): pd.CategoricalDtype(),
     str(Variables.MBSTATE_REC): pd.CategoricalDtype(),
     str(Variables.RESTATUS): pd.CategoricalDtype(),
     str(Variables.MBRACE): pd.CategoricalDtype(),
