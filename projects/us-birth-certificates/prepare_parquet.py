@@ -120,7 +120,8 @@ uint16_specs = {
     vars.DOB_YY: (1989, None),
     vars.DOB_TT: (0, 9999),
 
-    vars.DBWT: (0, 999),
+    vars.DBWT: (0, 9999),
+
     vars.DWGT_R: (100, 999),
     vars.PWGT_R: (75, 999),
 }
