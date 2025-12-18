@@ -30,7 +30,6 @@ class Variables(StrEnum):
     MAGER9 = "mager9"
     MAGE36 = "mage36"
     MAGER12 = "mager12"
-    MAGER8 = "mager8"
     MBSTATE_REC = "mbstate_rec"
     """Mother's Nativity"""
     RESTATUS = "restatus"
