@@ -1,6 +1,7 @@
 ## Additions:
 __*/
 .DS_Store
+.idea/
 
 *.parquet
 *.db
