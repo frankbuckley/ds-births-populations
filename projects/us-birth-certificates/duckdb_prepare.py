@@ -227,7 +227,16 @@ def combine_all() -> None:
         con.execute(
             f"""
             UPDATE us_births
-            SET {vars.CA_DOWN_C} = COALESCE({vars.CA_DOWN}, {vars.CA_DOWNS});
+            SET {vars.CA_DOWN_C} = CASE
+                WHEN (COALESCE ({vars.CA_DOWN}, {vars.CA_DOWNS})) IS NOT NULL THEN UPPER(COALESCE ({vars.CA_DOWN}, {vars.CA_DOWNS}))
+                WHEN {vars.UCA_DOWNS} = 1 THEN 'C'
+                WHEN {vars.UCA_DOWNS} = 2 THEN 'N'
+                WHEN {vars.UCA_DOWNS} = 9 THEN 'U'
+                WHEN {vars.DOWNS} = 1 THEN 'C'
+                WHEN {vars.DOWNS} = 2 THEN 'N'
+                WHEN {vars.DOWNS} = 9 THEN 'U' -- 8 (not on certificate) treated as unknown
+                ELSE NULL
+            END;          
             """
         )
 
