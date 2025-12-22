@@ -78,7 +78,7 @@ def plot_permutation_importances(
         result.importances[sorted_importances_idx].T,
         columns=X_eval.columns[sorted_importances_idx],
     )
-    x_size = max(4, min(6, 0.25 * importances.shape[1]))
+    x_size = max(4, min(6, 0.3 * importances.shape[1]))
     ax = importances.plot.box(vert=False, whis=10, figsize=(6, x_size))
     ax.set_title(f"Model {model_idx}: Permutation importances")
     ax.axvline(x=0, color="k", linestyle="--")
