@@ -347,7 +347,7 @@ def distance_corr_dissimilarity_linkage(X):
     """
     dissim = distance_corr_dissimilarity(X)
     condensed = squareform(dissim)
-    linkage = hierarchy.ward(condensed)
+    linkage = hierarchy.linkage(condensed, method="average")
     return dissim, condensed, linkage
 
 
