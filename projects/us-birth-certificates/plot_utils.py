@@ -99,7 +99,7 @@ def plot_permutation_importances(
 
 
 def plot_dendrogram(
-    condensed,
+    linkage,
     labels,
     model_idx: int,
     save: bool = False,
@@ -108,9 +108,8 @@ def plot_dendrogram(
 ):
     plt.figure(figsize=(5, 4))
 
-    dist_linkage = hierarchy.linkage(condensed, method="average")
     dendro = hierarchy.dendrogram(
-        dist_linkage,
+        linkage,
         labels=labels,
         orientation="right",
         ax=plt.axes(),
@@ -122,7 +121,7 @@ def plot_dendrogram(
     plt.title(f"Model {model_idx}: Hierarchical clustering of predictors")
     plt.show()
     
-    return dist_linkage, dendro
+    return dendro
 
 
 def plot_correlation_heatmap(
