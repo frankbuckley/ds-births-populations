@@ -106,7 +106,10 @@ def plot_dendrogram(
     output_dir: str = ".",
     file_name: str = "dendrogram",
 ):
-    plt.figure(figsize=(5, 4))
+    xsize = 8
+    ysize = max(6, min(15, 0.4 * len(labels)))
+    
+    plt.figure(figsize=(xsize, ysize))
 
     dendro = hierarchy.dendrogram(
         linkage,
