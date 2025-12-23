@@ -252,13 +252,8 @@ class LGBMEstimator:
         return self
 
     def _predict_p1(self, X):
-        # Use the early-stopped model size: if we omit num_iteration=best_iteration, then permutation
-        # importance might be computed using the full num_boost_round trees (or whatever the booster
-        # currently holds),
-        num_iter = getattr(self.booster, "best_iteration", None)
-        if num_iter is None or num_iter == 0:
-            return self.booster.predict(X)
-        return self.booster.predict(X, num_iteration=num_iter)
+        # Use the early-stopped model size
+        return self.booster.predict(X, num_iteration=self.booster.best_iteration)
 
     # ap_scorer calls predict_proba(),
     def predict_proba(self, X):
