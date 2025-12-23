@@ -106,8 +106,8 @@ def plot_dendrogram(
     output_dir: str = ".",
     file_name: str = "dendrogram",
 ):
-    xsize = 8
-    ysize = max(6, min(15, 0.4 * len(labels)))
+    xsize = 6
+    ysize = max(6, min(15, 0.25 * len(labels)))
     
     plt.figure(figsize=(xsize, ysize))
 
