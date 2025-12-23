@@ -82,7 +82,7 @@ def plot_permutation_importances(
     ax = importances.plot.box(vert=False, whis=10, figsize=(6, x_size))
     ax.set_title(f"Model {model_idx}: Permutation importances")
     ax.axvline(x=0, color="k", linestyle="--")
-    ax.set_xlabel("Decrease in accuracy score")
+    ax.set_xlabel("Decrease in average precision")
     ax.set_ylabel("Predictor variable")
 
     if save:
