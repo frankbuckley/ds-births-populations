@@ -12,6 +12,7 @@ import scipy as sp
 import joblib
 import datetime
 import psutil
+import lightgbm
 from typing import Any
 
 RANDOM_SEED = 202512
@@ -35,6 +36,7 @@ def get_environment_info() -> dict[str, str | bool | Any]:
         "pandas": pd.__version__,
         "scipy": sp.__version__,
         "sklearn": skl.__version__,
+        "lightgbm": lightgbm.__version__,
         "pytorch": torch.__version__,
         "pymc": pm.__version__,
         "pytensor": pytensor.__version__,
