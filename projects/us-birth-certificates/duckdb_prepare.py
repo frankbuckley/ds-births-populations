@@ -211,6 +211,26 @@ def combine_all() -> None:
         add_column(vars.P_DS_LB_NT_ETHN, "DOUBLE", con)
         add_column(vars.P_DS_LB_WT_MAGE_REDUC, "DOUBLE", con)
 
+        print("Adding id column...")
+        
+        con.execute("""
+            ALTER TABLE us_births ADD COLUMN id BIGINT;
+            """)
+        
+        con.execute(
+            """
+            UPDATE us_births
+            SET id = s.id
+            FROM (
+            SELECT
+                rowid,
+                row_number() OVER ()::BIGINT AS id
+            FROM us_births
+            ) s
+            WHERE us_births.rowid = s.rowid;
+            """
+        )
+        
         print("Setting year...")
 
         con.execute(

@@ -12,6 +12,7 @@ def load_predictors_data(from_year: int = 1989, to_year: int = 9999) -> pd.DataF
     df = con.execute(
         f"""
         SELECT
+            id,
             -- (training label) indicated if C or P, not indicated if N, U and missing excluded from training
             CASE
                 WHEN COALESCE (ca_down, ca_downs) = 'C' THEN 1::UTINYINT
