@@ -6,7 +6,7 @@ import pyarrow.compute as pc
 from variables import Variables as vars
 
 
-def load_predictors_data(from_year: int = 1989, to_year: int = 9999) -> pd.DataFrame:
+def load_predictors_data(from_year: int = 1989, to_year: int = 9999, include_unknown: bool = False) -> pd.DataFrame:
     con = duckdb.connect("./data/us_births.db", read_only=True)
 
     df = con.execute(
@@ -351,9 +351,9 @@ def load_predictors_data(from_year: int = 1989, to_year: int = 9999) -> pd.DataF
             END AS wic
         FROM
             us_births
-        WHERE year >= {from_year} AND year <= {to_year} AND ca_down_c_p_n IS NOT NULL
+        WHERE year >= {from_year} AND year <= {to_year} {'AND ca_down_c_p_n IS NOT NULL' if include_unknown else ''}
         ORDER BY
-            year, dob_mm, dob_wk
+            year, dob_mm, dob_wk, dob_tt
         """
     ).df()
 
