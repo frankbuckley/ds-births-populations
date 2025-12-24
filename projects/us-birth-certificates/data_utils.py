@@ -351,7 +351,7 @@ def load_predictors_data(from_year: int = 1989, to_year: int = 9999, include_unk
             END AS wic
         FROM
             us_births
-        WHERE year >= {from_year} AND year <= {to_year} {'AND ca_down_c_p_n IS NOT NULL' if include_unknown else ''}
+        WHERE year >= {from_year} AND year <= {to_year} {'' if include_unknown else 'AND ca_down_c_p_n IS NOT NULL'}
         ORDER BY
             year, dob_mm, dob_wk, dob_tt
         """
