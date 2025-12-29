@@ -18,8 +18,11 @@ def load_predictors_data(from_year: int = 1989, to_year: int = 9999, include_unk
                 WHEN COALESCE (ca_down, ca_downs) = 'C' THEN 1::UTINYINT
                 WHEN COALESCE (ca_down, ca_downs) = 'P' THEN 1::UTINYINT
                 WHEN COALESCE (ca_down, ca_downs) = 'N' THEN 0::UTINYINT
+                WHEN COALESCE (ca_down, ca_downs) = 'U' AND {include_unknown} THEN 0::UTINYINT
                 WHEN uca_downs = 1 THEN 1::UTINYINT
                 WHEN uca_downs = 2 THEN 0::UTINYINT
+                WHEN uca_downs = 9 AND {include_unknown} THEN 0::UTINYINT
+                WHEN ca_down IS NULL AND ca_downs IS NULL AND uca_downs IS NULL AND {include_unknown} THEN 0::UTINYINT
                 ELSE NULL
             END AS ca_down_c_p_n,        
             -- ==================== date of birth ====================

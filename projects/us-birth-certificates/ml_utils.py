@@ -50,6 +50,16 @@ def score_metrics(y_true, p_valid):
     )
 
 
+def _as_binary_y(y_true):
+    y = np.asarray(y_true)
+    if np.isnan(y).any():
+        raise ValueError("y_true contains NaNs; binarize/impute first.")
+    uniq = np.unique(y)
+    if not np.array_equal(uniq, [0, 1]) and not np.array_equal(uniq, [0]) and not np.array_equal(uniq, [1]):
+        raise ValueError(f"y_true must be 0/1 for these metrics. Found labels: {uniq[:20]}")
+    return y.astype(np.int8)
+
+
 def precision_recall_at_k(y_true, p_valid, K: int = 10000):
     """
     Compute precision and recall at top K predictions.
@@ -69,12 +79,31 @@ def precision_recall_at_k(y_true, p_valid, K: int = 10000):
         Precision at top K predictions.
     recall_at_k : float
         Recall at top K predictions.
+    tp : int
+        Number of true positives in top K.
+    fp : int
+        Number of false positives in top K.
+    n_pos : int
+        Total number of positive samples.
+    K : int
+        Number of top predictions considered.    
     """
-    order = np.argsort(-p_valid)
-    y_sorted = y_true.to_numpy()[order]
-    precision_at_k = y_sorted[:K].mean()
-    recall_at_k = y_sorted[:K].sum() / y_true.sum()
-    return precision_at_k, recall_at_k
+    y = _as_binary_y(y_true)
+    p = np.asarray(p_valid)
+
+    n = len(y)
+    K = min(int(K), n)
+
+    order = np.argsort(-p)
+    y_top = y[order[:K]]
+
+    tp = int(y_top.sum())
+    fp = int(K - tp)
+    n_pos = int((y == 1).sum())
+
+    precision = tp / K if K else 0.0
+    recall = tp / n_pos if n_pos else 0.0
+    return precision, recall, tp, fp, n_pos, K
 
 
 def precision_recall_at_threshold(y_true, p_valid, thr: float = 0.01):
@@ -99,9 +128,14 @@ def precision_recall_at_threshold(y_true, p_valid, thr: float = 0.01):
     f1 : float
         F1-score at the given threshold.
     """
-    y_hat = (p_valid >= thr).astype(int)
-    prec, rec, f1, _ = precision_recall_fscore_support(y_true, y_hat, average="binary")
-    return prec, rec, f1
+    y = _as_binary_y(y_true)
+    p = np.asarray(p_valid)
+
+    y_hat = (p >= thr).astype(np.int8)
+    prec, rec, f1, _ = precision_recall_fscore_support(
+        y, y_hat, average="binary", pos_label=1, zero_division=0
+    )
+    return float(prec), float(rec), float(f1)
 
 
 def get_metrics(y_true, p_valid, K: int = 10000, thr: float = 0.01):
@@ -118,6 +152,12 @@ def get_metrics(y_true, p_valid, K: int = 10000, thr: float = 0.01):
         Number of top predictions to consider for precision/recall at K.
     thr : float
         Threshold for precision/recall calculation.
+    tp : int
+        Number of true positives in top K.
+    fp : int
+        Number of false positives in top K.
+    n_pos : int
+        Total number of positive samples.
     Returns
     -------
     metrics_df : pd.DataFrame
@@ -133,7 +173,7 @@ def get_metrics(y_true, p_valid, K: int = 10000, thr: float = 0.01):
         p_valid_thresholds,
     ) = score_metrics(y_true, p_valid)
 
-    precision_at_k, recall_at_k = precision_recall_at_k(y_true, p_valid, K=K)
+    precision_at_k, recall_at_k, tp, fp, n_pos, K = precision_recall_at_k(y_true, p_valid, K=K)
 
     prec, rec, f1 = precision_recall_at_threshold(y_true, p_valid, thr=thr)
 
@@ -160,7 +200,7 @@ def get_metrics(y_true, p_valid, K: int = 10000, thr: float = 0.01):
         }
     )
 
-    return df, p_valid_fpr, p_valid_tpr, p_valid_thresholds
+    return df, p_valid_fpr, p_valid_tpr, p_valid_thresholds, tp, fp, n_pos
 
 
 def build_explain_set(
