@@ -1,8 +1,0 @@
-metric,value
-Validation AUC,0.8857759533100307
-Validation AP,0.03161329951041472
-Validation log loss,0.0036158942345478236
-Precision at 10000,0.0829
-Recall at 10000,0.11638354625859891
-Precision (threshold=0.01),0.026861388263061902
-Recall (threshold=0.01),0.2812017408395339
