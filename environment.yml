@@ -1,7 +1,6 @@
 name: data-stats-models-ml
 channels:
   - conda-forge
-  - defaults
 dependencies:
   - python=3.13
   - arviz
