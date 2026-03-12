@@ -2,43 +2,43 @@ name: data-stats-models-ml
 channels:
   - conda-forge
 dependencies:
-  - python=3.13
-  - arviz
-  - blackjax
+  - python=3.14
+  - arviz>=0.23.4,<1.0
   - dcor
-  - duckdb
+  - duckdb>=1.5.0
   - fastparquet
   - formulaic
   - graphviz
   - ipython
   - ipywidgets
-  - jax
   - jupyterlab
   - lightgbm
   - matplotlib
   - mpmath
   - networkx
-  - numpy
-  - numpyro
-  - nutpie
+  - numpy>=2.4.2
+  - numba>=0.64.0
+  - nutpie>=0.16.8
   - optuna
   - optuna-integration
   - orjson
-  - pandas
+  - pandas>=3.0.1
   - pandas-stubs
-  - pandoc
   - pingouin
   - polars
   - pyarrow
-  - pymc
+  - pymc>=5.28.1,<6.0
   - pyreadstat
+  - pytest>=9.0.2
+  - ruff>=0.11.0
   - pytorch
   - pyxlsb
-  - scikit-learn
-  - scipy
+  - scikit-learn>=1.8.0
+  - scipy>=1.17.1
   - scipy-stubs
   - seaborn
-  - shap
+  - setuptools>=80.10.2
+  - shap>=0.50.0
   - statsmodels
   - tabulate
   - xarray
@@ -47,4 +47,6 @@ dependencies:
   - XlsxWriter
   - pip
   - pip:
+    - jaxlib>=0.9.1
+    - numpyro>=0.20.0
       - optuna-integration[lightgbm]
